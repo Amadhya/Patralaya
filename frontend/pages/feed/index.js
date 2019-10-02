@@ -43,7 +43,6 @@ class Feed extends PureComponent {
 
   componentDidMount() {
     const {actions, loggedIn} = this.props;
-    console.log(loggedIn, '((((((((((((((((((((((((((((((((((((((');
 
     if(!loggedIn){
       Router.pushRoute('login');
@@ -134,9 +133,8 @@ class Feed extends PureComponent {
                 </Col>
               </RowWrapper>
               :
-              <Typography variant="body1" >Loading........................................................................</Typography>
+              <Typography variant="body1" >Loading...</Typography>
           }
-          {/*<Typography variant="body1" >Loading........................................................................</Typography>*/}
         </Container>
     )
   }

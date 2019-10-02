@@ -5,6 +5,7 @@ import {applyMiddleware, createStore} from 'redux';
 import logger from 'redux-logger';
 import thunk from 'redux-thunk';
 
+import {Router} from "../routes";
 import rootReducer from "../reducers";
 import Nav from "../components/nav";
 
