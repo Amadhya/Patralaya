@@ -72,9 +72,6 @@ def signin(request):
 @csrf_exempt
 def current_user(request):
     if request.method == 'POST':
-        print('---------------------------------------------')
-        print(request.META.get('HTTP_AUTHORIZATION', b''))
-        print('---------------------------------------------')
         auth = get_authorization_header(request).split()
 
         if not auth or auth[0].lower() != b'bearer':
@@ -120,19 +117,35 @@ def posts_by_user(request, user_id):
     if request.method == 'GET':
         user = User.objects.get_by_id(user_id)
         data = Post.objects.get_by_user_id(user)
-        post_list = []
+        feed = []
+        print(data, '--------------------------------------')
 
-        for post in data:
-            comment = Comment.objects.get_by_post_id(post=post)
-            post_list.append({
+        for post in reversed(data):
+            comment_list = Comment.objects.get_by_post_id(post=post)
+            comments_on_post = []
+
+            for comment in comment_list:
+                comments_on_post.append(comment.serialize())
+
+            kwargs = {
+                'post': post,
+            }
+            likes_list = Like.objects.filter_like(filter_by_both=False, **kwargs)
+            likes = []
+
+            for like in likes_list:
+                likes.append(like.serialize())
+
+            feed.append({
                 'post': post.serialize(),
-                'comment': comment.serialize()
+                'likes': likes,
+                'comments': comments_on_post
             })
 
         response = {
-            'post_list': post_list,
+            'status': 200,
+            'feed': feed,
         }
-
         return JsonResponse(response)
 
 

@@ -25,6 +25,10 @@ const ColWrapper = styled(Col)`
 `;
 const Container = styled.div`
   padding-top: 5rem;
+  min-height: 80vh;
+  align-items: center;
+  display: flex;
+  justify-content: center;
 `;
 
 class Feed extends PureComponent {
@@ -39,6 +43,7 @@ class Feed extends PureComponent {
 
   componentDidMount() {
     const {actions, loggedIn} = this.props;
+    console.log(loggedIn, '((((((((((((((((((((((((((((((((((((((');
 
     if(!loggedIn){
       Router.pushRoute('login');
@@ -131,6 +136,7 @@ class Feed extends PureComponent {
               :
               <Typography variant="body1" >Loading........................................................................</Typography>
           }
+          {/*<Typography variant="body1" >Loading........................................................................</Typography>*/}
         </Container>
     )
   }

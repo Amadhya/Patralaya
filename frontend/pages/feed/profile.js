@@ -2,7 +2,6 @@ import React, {PureComponent} from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {Avatar, Card, CardContent, Typography} from "@material-ui/core";
-import {red} from "@material-ui/core/colors";
 import styled from "styled-components";
 
 import fetchUserDetails , {getUserDetails, getSuccess, getStatus, getError} from "../../container/current-user/saga";
@@ -28,6 +27,7 @@ class Profile extends PureComponent {
 
   render() {
     const {currUser, pending, success} = this.props;
+    console.log(this.props);
     return(
       <div>
         {!pending && success && (

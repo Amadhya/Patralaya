@@ -1,8 +1,7 @@
 import React from 'react';
-import Link from 'next/link'
 import RateReviewRoundedIcon from '@material-ui/icons/RateReviewRounded';
 
-import Router from "../routes";
+import Router,{Link} from "../routes";
 
 class Nav extends React.PureComponent{
   constructor(props){
@@ -24,32 +23,42 @@ class Nav extends React.PureComponent{
 
   render() {
     const {loggedIn} = this.state;
+    console.log(loggedIn, '-------------------------------------------------------');
 
     return(
       <nav>
         <div>
           <RateReviewRoundedIcon fontSize="large"/>
-          <h1>
-            Patralaya
-          </h1>
+          <Link route="feed">
+            <h1>
+              Patralaya
+            </h1>
+          </Link>
         </div>
-        {!loggedIn ?
+        {loggedIn &&
           <div>
-            <h3>
-              <a href="/signup">SignUp</a>
-            </h3>
-            <h3>
-              <a href="/login">Login</a>
+            <Link route="profile">
+              <h3>
+                Profile
+              </h3>
+            </Link>
+            <h3 onClick={() => this.props.handleLogout()}>
+              Logout
             </h3>
           </div>
-          :
+        }
+        {!loggedIn &&
           <div>
-            <h3>
-              <a href="/profile">Profile</a>
-            </h3>
-            <h3 onClick={() => this.props.handleLogout()}>
-              <a href="#">Logout</a>
-            </h3>
+            <Link route="signup">
+              <h3>
+                SignUp
+              </h3>
+            </Link>
+            <Link route="login">
+              <h3>
+                Login
+              </h3>
+            </Link>
           </div>
         }
         <style jsx>{`
