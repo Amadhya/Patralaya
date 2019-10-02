@@ -16,11 +16,9 @@ class LikeManager(models.Manager):
             like = self.filter(post_field=post)
             if filter_by_both and not like:
                 return like
-            print(like, 'i am ready post')
 
         if user:
             like = self.filter(user=user)
-            print(like, 'i am ready user')
 
         return like
 

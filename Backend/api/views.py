@@ -22,7 +22,6 @@ def login(request):
         user = User.objects.authenticate(email=email, password=password)
 
         if user is not None:
-            # print(user.email)
             payload = {
                 'email': user.email,
                 'password': user.password,
@@ -116,9 +115,8 @@ def post_text(request):
 def posts_by_user(request, user_id):
     if request.method == 'GET':
         user = User.objects.get_by_id(user_id)
-        data = Post.objects.get_by_user_id(user)
+        data = Post.objects.get_by_user_id(user).order_by('updated_on')
         feed = []
-        print(data, '--------------------------------------')
 
         for post in reversed(data):
             comment_list = Comment.objects.get_by_post_id(post=post)
@@ -150,6 +148,31 @@ def posts_by_user(request, user_id):
 
 
 @csrf_exempt
+def edit_post(request, post_id):
+    if request.method == 'PATCH':
+        body = json.loads(request.body)
+        post = Post.objects.get_by_id(post_id)
+        if body.pop('post_text') and post:
+            post.post_text = body.pop('post_text')
+            post.save()
+            return HttpResponse(status=200)
+
+        return HttpResponse(status=400)
+
+
+@csrf_exempt
+def delete_post(request):
+    if request.method == 'DELETE':
+        body = json.loads(request.body)
+        Post.objects.get_by_id(body.pop('post_id')).delete()
+
+        response = {
+            'status': 200,
+        }
+        return JsonResponse(response)
+
+
+@csrf_exempt
 def create_like(request):
     if request.method == 'POST':
         body = json.loads(request.body)
@@ -162,8 +185,7 @@ def create_like(request):
         }
 
         like = Like.objects.filter_like(filter_by_both=True, **kwargs)
-        print(like)
-        print(not like)
+
         if not like:
             like = Like.create(**kwargs)
 
@@ -209,7 +231,7 @@ def comment_text(request):
 def get_feed(request):
     if request.method == 'GET':
         feed = []
-        post_list = Post.objects.all()
+        post_list = Post.objects.all().order_by('updated_on')
 
         for post in reversed(post_list):
             comment_list = Comment.objects.get_by_post_id(post=post)

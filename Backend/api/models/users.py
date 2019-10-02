@@ -46,9 +46,7 @@ class UserManager(BaseUserManager):
 
     def authenticate(self, email, password):
         user = self.get_by_email(email=email)
-        print(user, 'user<><><><><><>')
         if user is not None:
-            print(check_password(password, user.password), 'check_password(password, user.password)')
             if check_password(password, user.password):
                 return user
 

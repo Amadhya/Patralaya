@@ -9,7 +9,8 @@ import {newCommentReducer} from "../container/new-comment/saga";
 import {likeReducer} from "../container/like/saga";
 import {unlikeReducer} from "../container/unlike/saga";
 import {profileFeedReducer} from "../container/personal-feed/saga";
+import {postDeleteReducer} from "../container/delete-post/saga";
 
-const rootReducer = combineReducers({loginReducer, signupReducer, feedReducer, userReducer, profileFeedReducer, newPostReducer, newCommentReducer, likeReducer, unlikeReducer});
+const rootReducer = combineReducers({loginReducer, postDeleteReducer, signupReducer, feedReducer, userReducer, profileFeedReducer, newPostReducer, newCommentReducer, likeReducer, unlikeReducer});
 
 export default rootReducer;
