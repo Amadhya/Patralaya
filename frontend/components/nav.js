@@ -12,6 +12,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
+import PersonAddRoundedIcon from '@material-ui/icons/PersonAddRounded';
 
 import styled from 'styled-components';
 
@@ -111,7 +112,7 @@ class Nav extends React.PureComponent{
               onClick={(e) => this.handleMenu(e)}
               color="inherit"
           >
-            <AccountCircle />
+            {loggedIn ? <AccountCircle /> : <PersonAddRoundedIcon/>}
           </IconButton>
           <Menu
               id="menu-appbar"
