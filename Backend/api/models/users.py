@@ -2,7 +2,7 @@ import uuid
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.db import models
-from rest_framework_jwt.settings import api_settings
+from django.utils.timezone import now
 from django.contrib.auth.hashers import (
     check_password
 )
@@ -58,7 +58,7 @@ class User(PermissionsMixin, AbstractBaseUser):
     first_name = models.CharField('first name', max_length=50)
     last_name = models.CharField('last name', max_length=50)
     email = models.EmailField(unique=True)
-    date_joined = models.DateTimeField('date joined', auto_now_add=True)
+    date_joined = models.DateTimeField('date joined', default=now)
     is_active = models.BooleanField('active', default=True)
     is_staff = models.BooleanField('staff status', default=False)
 

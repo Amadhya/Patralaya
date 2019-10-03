@@ -19,7 +19,6 @@ const CardWrapper = styled(Card)`
   padding: 20px;
 `;
 const Wrapper = styled.div`
-  width: 100%;
   padding: 20px;
 `;
 

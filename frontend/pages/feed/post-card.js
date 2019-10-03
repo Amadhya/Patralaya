@@ -56,7 +56,7 @@ class PostCard extends PureComponent{
   componentDidMount() {
     const {postObj} = this.props;
 
-    if(typeof window !== "undefined" && postObj){
+    if(typeof window !== "undefined" && postObj && postObj.likes){
       const userId = localStorage.getItem('user_id');
       const obj = postObj.likes.find(item => item.user.id === userId);
 

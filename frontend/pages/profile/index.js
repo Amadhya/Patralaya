@@ -10,7 +10,8 @@ import Details from "./detail";
 import PostCard from "../feed/post-card";
 
 const RowWrapper = styled(Row)`
-  padding: 1rem 18rem;
+  padding: 0rem 18rem;
+  display: block;
   @media(max-width: 1024px){
     padding: 0px 5px;
   }
@@ -18,9 +19,6 @@ const RowWrapper = styled(Row)`
 const Container = styled.div`
   padding-top: 5rem;
   min-height: 80vh;
-  align-items: center;
-  display: flex;
-  justify-content: center;
 `;
 
 class Feed extends PureComponent {
@@ -50,6 +48,9 @@ class Feed extends PureComponent {
                   {feed.map(obj => (
                       <PostCard postObj={obj} key={obj.post.post_text}/>
                   ))}
+                  {feed.length === 0 &&
+                    <Typography variant="body1" color="textSecondary" align="center">No post by you yet...</Typography>
+                  }
               </RowWrapper>
               :
               <Typography variant="body1" >Loading...</Typography>

@@ -52,6 +52,13 @@ class Nav extends React.PureComponent{
     });
   };
 
+  handleLogout = () => {
+    this.setState({
+      anchorEl: null,
+    });
+    this.props.handleLogout()
+  };
+
   render() {
     const {loggedIn, anchorEl} = this.state;
     const open = Boolean(anchorEl);
@@ -112,7 +119,7 @@ class Nav extends React.PureComponent{
               onClick={(e) => this.handleMenu(e)}
               color="inherit"
           >
-            {loggedIn ? <AccountCircle /> : <PersonAddRoundedIcon/>}
+            {loggedIn ? <AccountCircle/> : <PersonAddRoundedIcon/>}
           </IconButton>
           <Menu
               id="menu-appbar"
@@ -136,7 +143,7 @@ class Nav extends React.PureComponent{
                     <p>Profile</p>
                   </Link>
                 </MenuItem>
-                <MenuItem onClick={() => this.props.handleLogout()}>Logout</MenuItem>
+                <MenuItem onClick={() => this.handleLogout()}>Logout</MenuItem>
               </ListWrapper>
               :
               <ListWrapper>
