@@ -107,6 +107,7 @@ class SignUp extends PureComponent{
                 name="First Name"
                 value={firstName}
                 autoComplete="email"
+                autoFocus
                 onChange={v => this.handleFirstNameChange(v)}
               />
             </Col>

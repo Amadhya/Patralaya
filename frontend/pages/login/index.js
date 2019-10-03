@@ -92,6 +92,7 @@ class Login extends PureComponent{
              name="email"
              value={email}
              autoComplete="email"
+             autoFocus
              onChange={v => this.handleEmailChange(v)}
          />
          <TextFieldInput

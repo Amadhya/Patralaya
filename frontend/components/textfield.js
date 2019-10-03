@@ -12,7 +12,7 @@ class TextFieldInput extends React.PureComponent{
   };
 
   render() {
-    const {id, label, type, name, autoComplete, value} = this.props;
+    const {id, label, type, name, autoComplete, value, autoFocus} = this.props;
 
     return(
       <TextField
@@ -24,7 +24,7 @@ class TextFieldInput extends React.PureComponent{
         autoComplete={autoComplete}
         margin="normal"
         variant="standard"
-        autoFocus
+        autoFocus={autoFocus}
         required
         onChange={this.handleChange}
       />
