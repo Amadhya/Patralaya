@@ -10,9 +10,15 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+import FlightTakeoffIcon from '@material-ui/icons/FlightTakeoff';
+import EditIcon from '@material-ui/icons/Edit';
+import PollIcon from '@material-ui/icons/Poll';
+import MovieIcon from '@material-ui/icons/Movie';
+import AndroidIcon from '@material-ui/icons/Android';
 import PersonAddRoundedIcon from '@material-ui/icons/PersonAddRounded';
+import RestaurantRoundedIcon from '@material-ui/icons/RestaurantRounded';
+import GradeIcon from '@material-ui/icons/Grade';
+import BubbleChartRoundedIcon from '@material-ui/icons/BubbleChartRounded';
 
 import styled from 'styled-components';
 
@@ -23,6 +29,41 @@ import {Typography} from "@material-ui/core";
 const ListWrapper = styled.div`
   display: block;
 `;
+
+const Categories = [
+  {
+    title: 'Entertainment',
+    icon: MovieIcon,
+  },
+  {
+    title: 'Fashion',
+    icon: GradeIcon,
+  },
+  {
+    title: 'Food',
+    icon: RestaurantRoundedIcon,
+  },
+  {
+    title: 'Literature',
+    icon: EditIcon,
+  },
+  {
+    title: 'Politics',
+    icon: PollIcon,
+  },
+  {
+    title: 'Science',
+    icon: BubbleChartRoundedIcon,
+  },
+  {
+    title: 'Technology',
+    icon: AndroidIcon,
+  },
+  {
+    title: 'Travel',
+    icon: FlightTakeoffIcon,
+  }
+];
 
 class Nav extends React.PureComponent{
   constructor(props){
@@ -81,10 +122,10 @@ class Nav extends React.PureComponent{
           <Typography variant="h5" color="textSecondary" align="center" gutterBottom>Categories</Typography>
           <Divider />
           <List>
-            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                <ListItem button key={text}>
-                  <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                  <ListItemText primary={text} />
+            {Categories.map(obj => (
+                <ListItem button key={obj.title}>
+                  <ListItemIcon><obj.icon/></ListItemIcon>
+                  <ListItemText primary={obj.title} />
                 </ListItem>
             ))}
           </List>

@@ -29,6 +29,7 @@ const Container = styled.div`
   align-items: center;
   display: flex;
   justify-content: center;
+  width: 99%;
 `;
 const FeedWrapper = styled(Col)`
   width: 100%;
