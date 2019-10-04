@@ -149,15 +149,22 @@ def posts_by_user(request, user_id):
 
 @csrf_exempt
 def edit_post(request, post_id):
+    print(request.method)
     if request.method == 'PATCH':
         body = json.loads(request.body)
         post = Post.objects.get_by_id(post_id)
-        if body.pop('post_text') and post:
+        if body.get('post_text') and post:
             post.post_text = body.pop('post_text')
             post.save()
-            return HttpResponse(status=200)
+            response = {
+                'status': 200,
+            }
+            return JsonResponse(response)
 
-        return HttpResponse(status=400)
+        response = {
+            'status': 400,
+        }
+        return JsonResponse(response)
 
 
 @csrf_exempt

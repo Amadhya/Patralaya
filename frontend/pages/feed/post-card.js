@@ -1,7 +1,7 @@
-import React, {PureComponent} from "react";
+import React, {PureComponent, Fragment} from "react";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {Avatar, Button, Card, CardContent, CardHeader, Typography, Box} from "@material-ui/core";
+import {Avatar, Button, Card, CardContent, CardHeader, Typography, Box, TextField} from "@material-ui/core";
 import styled from "styled-components";
 import {FlexView} from "../../components/layout";
 import ThumbUpAltRoundedIcon from '@material-ui/icons/ThumbUpAltRounded';
@@ -14,6 +14,7 @@ import Comment from "./comment";
 import fetchLikeDetails, {getSuccess, getError, getStatus} from "../../container/like/saga";
 import fetchPostDeleteDetails from "../../container/delete-post/saga";
 import fetchUnlikeDetails from "../../container/unlike/saga";
+import fetchPostEditDetails from "../../container/edit-post/saga";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 
@@ -38,6 +39,9 @@ const TypographyWrapper = styled(Typography)`
     display: none;
   }
 `;
+const ButtonWrapper = styled(Button)`
+  float: right;
+`;
 
 class PostCard extends PureComponent{
   constructor(props){
@@ -50,6 +54,7 @@ class PostCard extends PureComponent{
       noOfLikes: 0,
       anchorEl: null,
       isDeleted: false,
+      editText: '',
     }
   }
 
@@ -119,10 +124,20 @@ class PostCard extends PureComponent{
   handleDeletePost = () => {
     const {actions, postObj} = this.props;
 
+    this.handleClose();
     actions.fetchPostDeleteDetails(postObj.post.id);
     this.setState({
       isDeleted: true,
     })
+  };
+
+  handleEditPost = () => {
+    const {postObj} = this.props;
+
+    this.handleClose();
+    this.setState({
+      editText: postObj.post.post_text,
+    });
   };
 
   renderPopUp = () => {
@@ -155,16 +170,57 @@ class PostCard extends PureComponent{
             open={open}
             onClose={() => this.handleClose()}
         >
-          <MenuItem>Edit</MenuItem>
+          <MenuItem onClick={() => this.handleEditPost()}>Edit</MenuItem>
           <MenuItem onClick={() => this.handleDeletePost()}>Delete</MenuItem>
         </Menu>
       </div>
     );
   };
 
+  onEditPostChange = (event) => {
+    this.setState({
+      editText: event.target.value,
+    })
+  };
+
+  editPost = () => {
+    let {postObj, actions} = this.props;
+    const {editText} = this.state;
+
+    postObj.post.post_text = editText;
+    actions.fetchPostEditDetails(postObj.post.id, postObj.post.post_text);
+
+    this.setState({
+      editText: '',
+    })
+  };
+
+  renderEditPost = () => {
+    const {editText} = this.state;
+
+    return(
+        <Fragment>
+          <TextField
+              id="outlined-textarea"
+              label="Edit post...."
+              multiline
+              margin="normal"
+              variant="outlined"
+              fullWidth
+              autoFocus={true}
+              value={editText}
+              onChange={e => this.onEditPostChange(e)}
+          />
+          <ButtonWrapper variant="outlined" color="secondary" onClick={() => this.editPost()}>
+            Save
+          </ButtonWrapper>
+        </Fragment>
+    );
+  };
+
   render() {
     const {postObj} = this.props;
-    const {showComments, like, noOfLikes, isDeleted} = this.state;
+    const {showComments, like, noOfLikes, isDeleted, editText} = this.state;
 
     if(isDeleted)
       return(
@@ -186,9 +242,13 @@ class PostCard extends PureComponent{
             subheader={new Date(postObj.post.created_on).toString()}
         />
         <CardContent>
-          <Typography variant="body1" color="textSecondary" component="p">
-            {postObj.post.post_text}
-          </Typography>
+          {editText !== '' ?
+            this.renderEditPost()
+            :
+            <Typography variant="body1" color="textSecondary" style={{whiteSpace: 'pre-line'}}>
+              {postObj.post.post_text}
+            </Typography>
+          }
         </CardContent>
         <Box ml={2} mr={2} mb={0.5}>
           <Typography variant="caption" color="textSecondary">
@@ -224,6 +284,6 @@ const mapStateToProps = (state) => ({
 export default connect(
     mapStateToProps,
     dispatch => ({
-      actions: bindActionCreators({fetchLikeDetails, fetchUnlikeDetails, fetchPostDeleteDetails}, dispatch)
+      actions: bindActionCreators({fetchLikeDetails, fetchUnlikeDetails, fetchPostDeleteDetails, fetchPostEditDetails}, dispatch)
     }),
 )(PostCard);
