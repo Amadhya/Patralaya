@@ -19,6 +19,7 @@ const RowWrapper = styled(Row)`
 const Container = styled.div`
   padding-top: 5rem;
   min-height: 80vh;
+  width: 99%;
 `;
 
 class Feed extends PureComponent {
