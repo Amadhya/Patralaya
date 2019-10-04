@@ -29,6 +29,9 @@ import {Typography} from "@material-ui/core";
 const ListWrapper = styled.div`
   display: block;
 `;
+const NavWrapper = styled.div`
+  margin: 0 1rem;
+`;
 
 const Categories = [
   {
@@ -113,7 +116,7 @@ class Nav extends React.PureComponent{
     };
 
     const sideList = side => (
-        <div
+        <NavWrapper
             role="presentation"
             onClick={toggleDrawer(side, false)}
             onKeyDown={toggleDrawer(side, false)}
@@ -129,7 +132,7 @@ class Nav extends React.PureComponent{
                 </ListItem>
             ))}
           </List>
-        </div>
+        </NavWrapper>
     );
 
     return(
@@ -229,6 +232,9 @@ class Nav extends React.PureComponent{
           }
           h1{
             margin-left: 5px;
+          }
+          h1:hover{
+            cursor: pointer;
           }
           a{
             color: white;
