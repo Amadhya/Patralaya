@@ -2,6 +2,7 @@ import React, {PureComponent} from "react";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {Box, Typography, TextField, Avatar} from "@material-ui/core";
+import {FlexView} from "../../components/layout";
 import styled from 'styled-components';
 
 import fetchNewCommentDetails, {getNewComment, getSuccess, getError, getStatus} from "../../container/new-comment/saga";
@@ -98,13 +99,14 @@ class Comment extends PureComponent{
                 {item.user.first_name[0]}
               </AvatarWrapper>
               <CommentWrapper ml={1}>
-                <Typography variant="subtitle1" color="textPrimary">
-                  {item.user.first_name}&nbsp;{item.user.last_name}
-                </Typography>
-                <Typography variant="caption" color="textPrimary">
-                  {new Date(item.updated_on).toDateString()}
-                </Typography>
-                <br/>
+                <FlexView alignItems="center" justify="space-between">
+                  <Typography variant="subtitle1" color="textPrimary">
+                    {item.user.first_name}&nbsp;{item.user.last_name}
+                  </Typography>
+                  <Typography variant="caption" color="textPrimary">
+                    {new Date(item.updated_on).toDateString()}
+                  </Typography>
+                </FlexView>
                 <br/>
                 <Typography variant="body2" color="textPrimary">
                   {item.comment_text}

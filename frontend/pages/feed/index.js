@@ -30,6 +30,9 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
 `;
+const FeedWrapper = styled(Col)`
+  width: 100%;
+`;
 
 class Feed extends PureComponent {
   constructor(props){
@@ -106,7 +109,7 @@ class Feed extends PureComponent {
                 <ColWrapper sm={4}>
                   <Profile />
                 </ColWrapper>
-                <Col xs={12} sm={8}>
+                <FeedWrapper sm={8}>
                   <Box ml={2.5} mr={2.5} pb={1} borderBottom={1}>
                     <TextField
                         id="outlined-textarea"
@@ -130,7 +133,7 @@ class Feed extends PureComponent {
                   {currFeed.map(obj => (
                     <PostCard postObj={obj} key={obj.post.post_text}/>
                   ))}
-                </Col>
+                </FeedWrapper>
               </RowWrapper>
               :
               <Typography variant="body1" >Loading...</Typography>

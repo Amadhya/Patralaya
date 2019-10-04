@@ -8,7 +8,6 @@ import {Row, Col} from "../../components/layout";
 import fetchUserDetails , {getUserDetails, getSuccess, getStatus, getError} from "../../container/current-user/saga";
 
 const AvatarWrapper = styled(Avatar)`
-  margin: auto;
   background-color: #f44336 !important;
   width: 70px !important;
   height: 70px !important;
@@ -17,9 +16,17 @@ const AvatarWrapper = styled(Avatar)`
 `;
 const CardWrapper = styled(Card)`
   padding: 20px;
+  @media(max-width: 767px){
+    background: url(https://www.thedailydesigns.com/wp-content/uploads/2019/01/color-splash-1024x514.png);
+    background-size: 100% 50%;
+    background-repeat: no-repeat;
+  }
 `;
 const Wrapper = styled.div`
   padding: 20px;
+`;
+const ColWrapper = styled(Col)`
+  margin-right: 2rem;
 `;
 
 class Details extends PureComponent {
@@ -41,12 +48,12 @@ class Details extends PureComponent {
           {!pending && success && (
               <CardWrapper>
                 <Row>
-                  <Col>
+                  <ColWrapper xs={12} sm={1}>
                     <AvatarWrapper aria-label="name" sizes="large">
                       {currUser.first_name[0]}
                     </AvatarWrapper>
-                  </Col>
-                  <Col>
+                  </ColWrapper>
+                  <Col sm={10}>
                     <Typography variant="h5" color="textPrimary" gutterBottom>
                       {currUser.first_name}
                       &nbsp;
