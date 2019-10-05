@@ -1,5 +1,6 @@
 # Patralaya
 Patralaya is a web application where you can post text and categorise it.
+A user first has to login or sign-up after which he/she is promoted to feed page. A user can add his/her post and can like and comment on posts made by other users. A user can filter his/her feed using the categories provided. A user can view post by other user by visiting the profile page of the same.
 
 ## Tech Stack
 - **Frontend:** ReactJs (NextJS)
