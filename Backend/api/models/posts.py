@@ -15,6 +15,7 @@ class PostManager(models.Manager):
 class Post(BaseModel):
     post_text = models.TextField(null=False, default='')
     user = models.ForeignKey(User, on_delete=models.CASCADE, db_index=True, null=False)
+    category = models.CharField(max_length=50, null=False, default="general")
 
     objects = PostManager()
 
@@ -22,6 +23,7 @@ class Post(BaseModel):
         return {
             'id': self.id,
             'post_text': self.post_text,
+            'category': self.category,
             'user': self.user.serialize(),
             'created_on': self.created_on,
             'updated_on': self.updated_on,
@@ -37,6 +39,7 @@ class Post(BaseModel):
         post = Post(
             post_text=kwargs.pop('post_text'),
             user=kwargs.pop('user'),
+            category=kwargs.pop('category')
         )
         if kwargs.get('updated_on'):
             post.updated_on = kwargs.pop('updated_on'),

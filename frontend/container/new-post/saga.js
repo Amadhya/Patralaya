@@ -65,12 +65,12 @@ export const getNewPostError = state => state.newPostReducer.error;
 export const getNewPostSuccess = state => state.newPostReducer.success;
 
 //SAGA
-export default function fetchNewPostDetails(user_id, post_text) {
+export default function fetchNewPostDetails(user_id, post_text, category) {
   return dispatch => {
     dispatch(newPostPending());
     return fetch('http://127.0.0.1:8000/api/post', {
       method: 'POST',
-      body: JSON.stringify({user_id: user_id, post_text: post_text})
+      body: JSON.stringify({user_id: user_id, post_text: post_text, category: category})
     })
         .then(res => res.json())
         .then(res => {

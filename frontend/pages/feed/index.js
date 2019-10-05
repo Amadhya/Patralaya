@@ -1,7 +1,7 @@
-import React, {PureComponent} from "react";
+import React, {PureComponent, Fragment} from "react";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {Typography, Button, TextField, Box} from '@material-ui/core';
+import {Typography, Button, TextField, Box, InputLabel, FormControl, Select} from '@material-ui/core';
 import styled from 'styled-components';
 
 import {Row, Col, FlexView} from "../../components/layout";
@@ -13,7 +13,7 @@ import Profile from "./profile";
 import PostCard from "./post-card";
 
 const RowWrapper = styled(Row)`
-  padding: 0px 15rem;
+  padding: 0px 12rem;
   @media(max-width: 1024px){
     padding: 0px 5px;
   }
@@ -26,7 +26,6 @@ const ColWrapper = styled(Col)`
 const Container = styled.div`
   padding-top: 5rem;
   min-height: 80vh;
-  align-items: center;
   display: flex;
   justify-content: center;
   width: 99%;
@@ -34,6 +33,15 @@ const Container = styled.div`
 const FeedWrapper = styled(Col)`
   width: 100%;
 `;
+const CategoryWrapper = styled(FormControl)`
+  width: 105px;
+  margin: 0 1rem !important;
+`;
+const InputLabelWrapper = styled(InputLabel)`
+  color: #f50057 !important;
+`;
+
+const Categories = ['Entertainment', 'Fashion', 'Food', 'Literature', 'Politics', 'Science', 'Technology', 'Travel'];
 
 class Feed extends PureComponent {
   constructor(props){
@@ -42,6 +50,9 @@ class Feed extends PureComponent {
       newPost: '',
       newPostList: [],
       isClicked: false,
+      category: '',
+      error: false,
+      errorMessgae: '',
     }
   }
 
@@ -78,12 +89,34 @@ class Feed extends PureComponent {
 
   handleNewPost = (userId) => {
     const {actions} = this.props;
-    const {newPost} = this.state;
-    actions.fetchNewPostDetails(userId, newPost);
+    const {newPost, category} = this.state;
+    if(newPost === ''){
+      this.setState({
+        error: true,
+        errorMessage: 'Please write something',
+      });
+      return;
+    }
+    if(category === ''){
+      this.setState({
+        error: true,
+        errorMessage: 'Please select category of your post',
+      });
+      return;
+    }
+    actions.fetchNewPostDetails(userId, newPost, category);
     this.setState({
       newPost: '',
+      category: '',
+      error: false,
       isClicked: true,
     });
+  };
+
+  handleCategorySelect = (e) => {
+    this.setState({
+      category: e.target.value,
+    })
   };
 
   onNewPostChange = (e) => {
@@ -97,7 +130,7 @@ class Feed extends PureComponent {
   render() {
     const {pending, success, feed} = this.props;
     const {userReducer: {user: currUser}} = store.getState();
-    const {newPost, newPostList} = this.state;
+    const {newPost, newPostList, category, error, errorMessage} = this.state;
     const currFeed = [
       ...newPostList,
       ...feed
@@ -126,10 +159,35 @@ class Feed extends PureComponent {
                       <Typography variant="subtitle1" color="secondary" gutterBottom>
                         Write on PostBook
                       </Typography>
-                      <Button variant="outlined" color="secondary" onClick={() => this.handleNewPost(currUser.id)}>
-                        Post
-                      </Button>
+                      <FlexView>
+                        <CategoryWrapper>
+                          <InputLabelWrapper margin htmlFor="outlined-age-native-simple">
+                            Category
+                          </InputLabelWrapper>
+                          <Select
+                              native
+                              value={category}
+                              onChange={(e) => this.handleCategorySelect(e)}
+                          >
+                            <option value="" disabled>
+
+                            </option>
+                            {Categories.map((text) => (
+                                <option value={text} key={text}>{text}</option>
+                            ))}
+                          </Select>
+                        </CategoryWrapper>
+                        <Button variant="outlined" color="secondary" onClick={() => this.handleNewPost(currUser.id)}>
+                          Post
+                        </Button>
+                      </FlexView>
                     </FlexView>
+                    {error &&
+                      <Fragment>
+                        <br/>
+                        <Typography variant="caption" color="error">{errorMessage}</Typography>
+                      </Fragment>
+                    }
                   </Box>
                   {currFeed.map(obj => (
                     <PostCard postObj={obj} key={obj.post.post_text}/>
