@@ -20,6 +20,18 @@ class MyApp extends React.PureComponent{
     };
   }
 
+  static async getInitialProps({Component, ctx}){
+    let pageProps = {};
+
+    if(Component.getInitialProps){
+      pageProps = await Component.getInitialProps(ctx);
+    }
+
+    return {
+      pageProps,
+    };
+  }
+
   static getDerivedStateFromProps(props, state){
     if(typeof window !== 'undefined'){
       return {

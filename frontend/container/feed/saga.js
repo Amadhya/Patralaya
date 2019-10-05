@@ -66,10 +66,15 @@ export const getSuccess = state => state.feedReducer.success;
 export const getError = state => state.feedReducer.error;
 
 //SAGA
-export default function fetchFeed() {
+export default function fetchFeed(queryFilter) {
+  console.log(queryFilter);
+  let filter = '';
+  if(typeof queryFilter !== "undefined")
+    filter=queryFilter;
+
   return dispatch => {
     dispatch(feedPending());
-     return fetch("http://127.0.0.1:8000/api/feed")
+     return fetch(`http://127.0.0.1:8000/api/feed?filter=${filter}`)
     .then(res => res.json())
     .then(res => {
       if(res.status === 200)

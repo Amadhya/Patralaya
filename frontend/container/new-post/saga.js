@@ -51,6 +51,7 @@ export function newPostReducer(state=initialState, action) {
     case ACTIONS.POST_FAILURE:
       return {
         ...state,
+        pending: false,
         error: action.error,
       };
     default:
@@ -65,12 +66,12 @@ export const getNewPostError = state => state.newPostReducer.error;
 export const getNewPostSuccess = state => state.newPostReducer.success;
 
 //SAGA
-export default function fetchNewPostDetails(user_id, post_text, category) {
+export default function fetchNewPostDetails(post_text, category) {
   return dispatch => {
     dispatch(newPostPending());
     return fetch('http://127.0.0.1:8000/api/post', {
       method: 'POST',
-      body: JSON.stringify({user_id: user_id, post_text: post_text, category: category})
+      body: JSON.stringify({user_id: localStorage.getItem('user_id'), post_text: post_text, category: category})
     })
         .then(res => res.json())
         .then(res => {

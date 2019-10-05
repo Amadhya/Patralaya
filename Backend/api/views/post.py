@@ -14,9 +14,16 @@ def post_text(request):
             'user': user,
             **body,
         }
-        post = Post.create(**body)
+        if body.get('post_text') == '':
+            response = {'message': 'Please write something', 'status': 400}
+            return JsonResponse(response)
 
-        return JsonResponse(post.serialize())
+        if body.get('category'):
+            post = Post.create(**body)
+            return JsonResponse(post.serialize())
+
+        response = {'message': 'Please select category', 'status': 400}
+        return JsonResponse(response)
 
 
 @csrf_exempt

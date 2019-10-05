@@ -42,7 +42,7 @@ class Details extends PureComponent {
 
   render() {
     const {currUser, pending, success} = this.props;
-    console.log(this.props);
+
     return(
         <Wrapper>
           {!pending && success && (

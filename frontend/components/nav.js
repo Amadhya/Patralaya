@@ -22,7 +22,7 @@ import BubbleChartRoundedIcon from '@material-ui/icons/BubbleChartRounded';
 
 import styled from 'styled-components';
 
-import {Link} from "../routes";
+import {Link, Router} from "../routes";
 import DehazeIcon from '@material-ui/icons/Dehaze';
 import {Typography} from "@material-ui/core";
 
@@ -103,6 +103,10 @@ class Nav extends React.PureComponent{
     this.props.handleLogout()
   };
 
+  handleFilterClick = (filter) => {
+    Router.pushRoute('feed', {filter: filter})
+  };
+
   render() {
     const {loggedIn, anchorEl} = this.state;
     const open = Boolean(anchorEl);
@@ -126,7 +130,7 @@ class Nav extends React.PureComponent{
           <Divider />
           <List>
             {Categories.map(obj => (
-                <ListItem button key={obj.title}>
+                <ListItem button key={obj.title} onClick={() => this.handleFilterClick(obj.title)}>
                   <ListItemIcon><obj.icon/></ListItemIcon>
                   <ListItemText primary={obj.title} />
                 </ListItem>

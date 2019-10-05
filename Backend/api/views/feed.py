@@ -8,7 +8,12 @@ from api.models import *
 def get_feed(request):
     if request.method == 'GET':
         feed = []
-        post_list = Post.objects.all().order_by('updated_on')
+        filter_post = request.GET.get('filter')
+
+        if filter_post != '':
+            post_list = Post.objects.filter_by_category(filter_post).order_by('updated_on')
+        else:
+            post_list = Post.objects.all().order_by('updated_on')
 
         for post in reversed(post_list):
             comment_list = Comment.objects.get_by_post_id(post=post)

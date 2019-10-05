@@ -1,19 +1,20 @@
 import React, {PureComponent, Fragment} from "react";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { withRouter } from 'next/router';
 import {Typography, Button, TextField, Box, InputLabel, FormControl, Select} from '@material-ui/core';
 import styled from 'styled-components';
 
 import {Row, Col, FlexView} from "../../components/layout";
 import {Router} from "../../routes";
-import {store} from "../_app";
 import fetchFeed , {getSuccess, getError, getStatus, getFeed} from "../../container/feed/saga";
 import fetchNewPostDetails, {getNewPost, getNewPostStatus, getNewPostSuccess, getNewPostError} from "../../container/new-post/saga";
 import Profile from "./profile";
 import PostCard from "./post-card";
 
 const RowWrapper = styled(Row)`
-  padding: 0px 12rem;
+  padding: 0px 15rem;
+  width: 99%;
   @media(max-width: 1024px){
     padding: 0px 5px;
   }
@@ -51,26 +52,39 @@ class Feed extends PureComponent {
       newPostList: [],
       isClicked: false,
       category: '',
-      error: false,
-      errorMessgae: '',
+    }
+  }
+
+  static async getInitialProps(context){
+    const {query} = context;
+
+    return {
+      query
     }
   }
 
   componentDidMount() {
-    const {actions, loggedIn} = this.props;
+    const {actions, loggedIn, query: {filter = ''}} = this.props;
 
     if(!loggedIn){
       Router.pushRoute('login');
     }
-    actions.fetchFeed();
+    actions.fetchFeed(filter);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const {loggedIn, newPostData, newPostSuccess, newPostPending} = this.props;
+    const {loggedIn, newPostData, newPostSuccess, newPostPending, actions} = this.props;
     const {isClicked, newPostList} = this.state;
 
     if(typeof loggedIn!== 'undefined' && !loggedIn){
       Router.pushRoute('login');
+    }
+
+    if(prevProps.query && this.props.query && prevProps.query.filter !== this.props.query.filter){
+      actions.fetchFeed(this.props.query.filter);
+      this.setState({
+        newPostList: [],
+      })
     }
 
     if(isClicked && !newPostPending && newPostSuccess && newPostData){
@@ -87,28 +101,13 @@ class Feed extends PureComponent {
     }
   }
 
-  handleNewPost = (userId) => {
+  handleNewPost = () => {
     const {actions} = this.props;
     const {newPost, category} = this.state;
-    if(newPost === ''){
-      this.setState({
-        error: true,
-        errorMessage: 'Please write something',
-      });
-      return;
-    }
-    if(category === ''){
-      this.setState({
-        error: true,
-        errorMessage: 'Please select category of your post',
-      });
-      return;
-    }
-    actions.fetchNewPostDetails(userId, newPost, category);
+    actions.fetchNewPostDetails(newPost, category);
     this.setState({
       newPost: '',
       category: '',
-      error: false,
       isClicked: true,
     });
   };
@@ -128,9 +127,8 @@ class Feed extends PureComponent {
   };
 
   render() {
-    const {pending, success, feed} = this.props;
-    const {userReducer: {user: currUser}} = store.getState();
-    const {newPost, newPostList, category, error, errorMessage} = this.state;
+    const {pending, success, feed, newPostPending, newPostError, query: {filter = ''}} = this.props;
+    const {newPost, newPostList, category} = this.state;
     const currFeed = [
       ...newPostList,
       ...feed
@@ -161,7 +159,7 @@ class Feed extends PureComponent {
                       </Typography>
                       <FlexView>
                         <CategoryWrapper>
-                          <InputLabelWrapper margin htmlFor="outlined-age-native-simple">
+                          <InputLabelWrapper margin="dense" htmlFor="outlined-age-native-simple">
                             Category
                           </InputLabelWrapper>
                           <Select
@@ -177,21 +175,27 @@ class Feed extends PureComponent {
                             ))}
                           </Select>
                         </CategoryWrapper>
-                        <Button variant="outlined" color="secondary" onClick={() => this.handleNewPost(currUser.id)}>
+                        <Button disabled={!(category && newPost)} variant="outlined" color="secondary" onClick={() => this.handleNewPost()}>
                           Post
                         </Button>
                       </FlexView>
                     </FlexView>
-                    {error &&
+                    {!newPostPending && newPostError &&
                       <Fragment>
                         <br/>
-                        <Typography variant="caption" color="error">{errorMessage}</Typography>
+                        <Typography variant="caption" color="error">{newPostError}</Typography>
                       </Fragment>
                     }
                   </Box>
                   {currFeed.map(obj => (
                     <PostCard postObj={obj} key={obj.post.post_text}/>
                   ))}
+                  {currFeed.length === 0 &&
+                    <Fragment>
+                      <br/>
+                      <Typography variant="body1" color="textSecondary" align="center">No post yet {filter && "for "+filter+" category"}...</Typography>
+                    </Fragment>
+                  }
                 </FeedWrapper>
               </RowWrapper>
               :
@@ -214,9 +218,9 @@ const mapStateToProps = (state) => ({
   newPostPending: getNewPostStatus(state),
 });
 
-export default connect(
+export default withRouter(connect(
     mapStateToProps,
     dispatch => ({
       actions: bindActionCreators({fetchFeed, fetchNewPostDetails}, dispatch)
     }),
-)(Feed);
+)(Feed));
