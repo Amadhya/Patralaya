@@ -65,24 +65,23 @@ export const getError = state => state.userReducer.error;
 export const getSuccess = state => state.userReducer.success;
 
 //SAGA
-export default function fetchUserDetails() {
+export default function fetchUserDetails(user_id) {
   return dispatch => {
     dispatch(userPending());
-    return fetch('http://127.0.0.1:8000/api/current_user', {
-      method: 'POST',
+    return fetch(`http://127.0.0.1:8000/api/profile/${user_id}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       }
     })
-        .then(res => res.json())
-        .then(res => {
-          if(res.status === 400)
-            throw res.message;
+      .then(res => res.json())
+      .then(res => {
+        if(res.status === 400)
+          throw res.message;
 
-          dispatch(userSuccess(res.user));
-        })
-        .catch(error => {
-          dispatch(userFailure(error))
-        })
+        dispatch(userSuccess(res.user));
+      })
+      .catch(error => {
+        dispatch(userFailure(error))
+      })
   };
 };

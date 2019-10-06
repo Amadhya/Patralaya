@@ -187,7 +187,7 @@ class Nav extends React.PureComponent{
             {loggedIn ?
               <ListWrapper>
                 <MenuItem onClick={() => this.handleClose()}>
-                  <Link route="profile">
+                  <Link to={'/profile/'+localStorage.getItem('user_id')}>
                     <p>Profile</p>
                   </Link>
                 </MenuItem>

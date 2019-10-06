@@ -3,11 +3,12 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http.response import JsonResponse
 
 from api.models import *
+from .authorization import authenticate
 
 
 @csrf_exempt
 def post_text(request):
-    if request.method == 'POST':
+    if request.method == 'POST' and authenticate(request):
         body = json.loads(request.body)
         user = User.objects.get_by_id(body.pop('user_id'))
         body = {
@@ -28,7 +29,7 @@ def post_text(request):
 
 @csrf_exempt
 def posts_by_user(request, user_id):
-    if request.method == 'GET':
+    if request.method == 'GET' and authenticate(request):
         user = User.objects.get_by_id(user_id)
         data = Post.objects.get_by_user_id(user).order_by('updated_on')
         feed = []
@@ -64,8 +65,7 @@ def posts_by_user(request, user_id):
 
 @csrf_exempt
 def edit_post(request, post_id):
-    print(request.method)
-    if request.method == 'PATCH':
+    if request.method == 'PATCH' and authenticate(request):
         body = json.loads(request.body)
         post = Post.objects.get_by_id(post_id)
         if body.get('post_text') and post:
@@ -84,7 +84,7 @@ def edit_post(request, post_id):
 
 @csrf_exempt
 def delete_post(request):
-    if request.method == 'DELETE':
+    if request.method == 'DELETE' and authenticate(request):
         body = json.loads(request.body)
         Post.objects.get_by_id(body.pop('post_id')).delete()
 

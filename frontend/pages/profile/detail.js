@@ -35,9 +35,9 @@ class Details extends PureComponent {
   }
 
   componentDidMount() {
-    const {actions} = this.props;
+    const {actions, user_id} = this.props;
 
-    actions.fetchUserDetails();
+    actions.fetchUserDetails(user_id);
   }
 
   render() {

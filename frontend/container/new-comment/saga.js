@@ -70,6 +70,9 @@ export default function fetchNewCommentDetails(user_id, post_id, comment_text) {
     dispatch(newCommentPending());
     return fetch('http://127.0.0.1:8000/api/comment', {
       method: 'POST',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
       body: JSON.stringify({user_id: user_id, post_id: post_id, comment_text: comment_text})
     })
         .then(res => res.json())

@@ -66,6 +66,9 @@ export default function fetchLikeDetails(post_id, user_id) {
     dispatch(likePending());
     return fetch(`http://127.0.0.1:8000/api/like`, {
       method: 'POST',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
       body: JSON.stringify({post_id: post_id, user_id: user_id})
     })
         .then(res => res.json())

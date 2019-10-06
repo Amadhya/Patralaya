@@ -74,7 +74,11 @@ export default function fetchFeed(queryFilter) {
 
   return dispatch => {
     dispatch(feedPending());
-     return fetch(`http://127.0.0.1:8000/api/feed?filter=${filter}`)
+     return fetch(`http://127.0.0.1:8000/api/feed?filter=${filter}`,{
+       headers: {
+         Authorization: `Bearer ${localStorage.getItem('token')}`,
+       }
+     })
     .then(res => res.json())
     .then(res => {
       if(res.status === 200)

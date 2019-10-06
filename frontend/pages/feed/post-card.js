@@ -10,6 +10,7 @@ import ThumbUpAltOutlinedIcon from '@material-ui/icons/ThumbUpAltOutlined';
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
+import {Link, Router} from "../../routes";
 import Comment from "./comment";
 import fetchLikeDetails, {getSuccess, getError, getStatus} from "../../container/like/saga";
 import fetchPostDeleteDetails from "../../container/delete-post/saga";
@@ -238,7 +239,13 @@ class PostCard extends PureComponent{
             action={
                localStorage.getItem('user_id') === postObj.post.user.id && this.renderPopUp()
             }
-            title={postObj.post.user.first_name+' '+postObj.post.user.last_name}
+            title={
+              <Link to={'/profile/'+ postObj.post.user.id}>
+                <Typography variant="body1">
+                  {postObj.post.user.first_name+' '+postObj.post.user.last_name}
+                </Typography>
+              </Link>
+            }
             subheader={new Date(postObj.post.created_on).toString()}
         />
         <CardContent>

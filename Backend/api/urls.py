@@ -4,7 +4,7 @@ from api.views import *
 
 urlpatterns = [
     path('feed', get_feed, name='feed'),
-    path('current_user', current_user, name='current_user'),
+    path('profile/<uuid:user_id>', user_profile, name='user profile'),
     path('post', post_text, name='post'),
     path('post/<uuid:user_id>', posts_by_user, name='posts by user'),
     path('delete_post', delete_post, name='delete post'),

@@ -66,6 +66,9 @@ export default function fetchPostDeleteDetails(post_id) {
     dispatch(postDeletePending());
     return fetch(`http://127.0.0.1:8000/api/delete_post`, {
       method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
       body: JSON.stringify({post_id: post_id})
     })
         .then(res => res.json())

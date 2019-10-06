@@ -3,11 +3,20 @@
   <component name="ChangeListManager">
     <list default="true" id="808ca768-b7d6-4c31-9d99-73247d6e981c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/models/posts.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/models/posts.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/views/comment.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/views/comment.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/views/feed.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/views/feed.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/views/like.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/views/like.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/views/post.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/views/post.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/views/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/views/user.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/pages/feed/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/pages/feed/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/components/nav.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/components/nav.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/container/current-user/saga.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/container/current-user/saga.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/container/personal-feed/saga.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/container/personal-feed/saga.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/pages/feed/post-card.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/pages/feed/post-card.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/pages/profile/detail.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/pages/profile/detail.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/pages/profile/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/pages/profile/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/routes/index.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

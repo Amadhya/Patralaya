@@ -22,7 +22,7 @@ class Profile extends PureComponent {
   componentDidMount() {
     const {actions} = this.props;
 
-    actions.fetchUserDetails();
+    actions.fetchUserDetails(localStorage.getItem('user_id'));
   }
 
   render() {

@@ -66,6 +66,9 @@ export default function fetchUnlikeDetails(post_id, user_id) {
     dispatch(unlikePending());
     return fetch(`http://127.0.0.1:8000/api/unlike`, {
       method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
       body: JSON.stringify({post_id: post_id, user_id: user_id})
     })
         .then(res => res.json())

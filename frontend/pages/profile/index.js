@@ -22,30 +22,36 @@ const Container = styled.div`
   width: 99%;
 `;
 
-class Feed extends PureComponent {
+class Profile extends PureComponent {
   constructor(props){
     super(props);
   }
 
+  static async getInitialProps(context){
+    const {query} = context;
+    return {
+      query
+    };
+  }
+
   componentDidMount() {
-    const {actions, loggedIn} = this.props;
-    const userId = localStorage.getItem('token');
+    const {actions, loggedIn, query: {id}} = this.props;
 
     if(!loggedIn){
       Router.pushRoute('login');
     }
 
-    actions.fetchProfileFeed();
+    actions.fetchProfileFeed(id);
   }
 
   render() {
-    const {pending, success, feed} = this.props;
+    const {pending, success, feed, query: {id}} = this.props;
 
     return(
         <Container>
           {!pending && success ?
               <RowWrapper>
-                  <Details />
+                  <Details user_id={id}/>
                   {feed.map(obj => (
                       <PostCard postObj={obj} key={obj.post.post_text}/>
                   ))}
@@ -73,4 +79,4 @@ export default connect(
     dispatch => ({
       actions: bindActionCreators({fetchProfileFeed}, dispatch)
     }),
-)(Feed);
+)(Profile);

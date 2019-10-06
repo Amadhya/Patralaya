@@ -71,6 +71,9 @@ export default function fetchNewPostDetails(post_text, category) {
     dispatch(newPostPending());
     return fetch('http://127.0.0.1:8000/api/post', {
       method: 'POST',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
       body: JSON.stringify({user_id: localStorage.getItem('user_id'), post_text: post_text, category: category})
     })
         .then(res => res.json())

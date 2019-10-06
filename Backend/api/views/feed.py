@@ -2,11 +2,12 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http.response import JsonResponse
 
 from api.models import *
+from .authorization import authenticate
 
 
 @csrf_exempt
 def get_feed(request):
-    if request.method == 'GET':
+    if request.method == 'GET' and authenticate(request):
         feed = []
         filter_post = request.GET.get('filter')
 

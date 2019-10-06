@@ -66,6 +66,9 @@ export default function fetchPostEditDetails(post_id,edit_text) {
     dispatch(postEditPending());
     return fetch(`http://127.0.0.1:8000/api/post/edit/${post_id}`, {
       method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
       body: JSON.stringify({post_text: edit_text})
     })
         .then(res => res.json())

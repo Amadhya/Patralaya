@@ -64,10 +64,14 @@ export const getSuccess = state => state.profileFeedReducer.success;
 export const getError = state => state.profileFeedReducer.error;
 
 //SAGA
-export default function fetchProfileFeed() {
+export default function fetchProfileFeed(user_id) {
   return dispatch => {
     dispatch(profileFeedPending());
-    return fetch(`http://127.0.0.1:8000/api/post/${localStorage.getItem('user_id')}`)
+    return fetch(`http://127.0.0.1:8000/api/post/${user_id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      }
+    })
         .then(res => res.json())
         .then(res => {
           if(res.status === 200)
