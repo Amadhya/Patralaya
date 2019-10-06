@@ -1,7 +1,7 @@
 import jwt
 from rest_framework import exceptions
 from django.views.decorators.csrf import csrf_exempt
-from django.http.response import JsonResponse, HttpResponse
+from django.http.response import HttpResponse
 from rest_framework.authentication import get_authorization_header
 
 from api.models import *

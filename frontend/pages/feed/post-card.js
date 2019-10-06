@@ -148,7 +148,7 @@ class PostCard extends PureComponent{
     return (
       <div>
         <IconButton
-            aria-label="account of current user"
+            aria-label="edit post"
             aria-controls="menu-appbar"
             aria-haspopup="true"
             onClick={(e) => this.handleMenu(e)}

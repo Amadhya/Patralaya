@@ -12,7 +12,6 @@ class PostManager(models.Manager):
         return self.filter(id=post_id).first()
 
     def filter_by_category(self, filter_post):
-        print(filter_post, '<><><><><><<<<<<<><<<><><><<M<<M<<')
         return self.filter(category=filter_post)
 
 
