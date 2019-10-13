@@ -3,9 +3,9 @@ Patralaya is a web application where you can post text and images and categorise
 User first has to login or sign-up after which he/she is promoted to feed page. User can add his/her post and can like and comment on posts made by other users. Feed can be filtered using the categories provided. Posts by a particular user can viewed by visiting their profile page.
 
 ## Tech Stack
-- **Frontend:** ReactJs (NextJS)
+- **Frontend:** React (NextJS)
 - **Backend:** Django
-- **Database:** Postgres
+- **Database:** PostgreSQL
 
 ## Steps to run backend server
 <ol>
