@@ -3,14 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="3f90a1f8-8985-4250-89f6-574b194500c7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/../Backend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/api/models/posts.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/api/models/posts.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/api/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/api/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/api/views/comment.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/api/views/comment.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/api/views/post.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/api/views/post.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/feed/comment.js" beforeDir="false" afterPath="$PROJECT_DIR$/pages/feed/comment.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/feed/post-card.js" beforeDir="false" afterPath="$PROJECT_DIR$/pages/feed/post-card.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reducers/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/reducers/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/feed/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/pages/feed/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/profile/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/pages/profile/index.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -60,7 +55,7 @@
       <workItem from="1569940306897" duration="992000" />
       <workItem from="1569942569129" duration="27085000" />
       <workItem from="1570118127878" duration="39088000" />
-      <workItem from="1570357333074" duration="9108000" />
+      <workItem from="1570357333074" duration="10410000" />
     </task>
     <servers />
   </component>

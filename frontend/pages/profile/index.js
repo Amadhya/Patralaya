@@ -60,7 +60,7 @@ class Profile extends PureComponent {
                   }
               </RowWrapper>
               :
-              <Typography variant="body1" >Loading...</Typography>
+              <Typography variant="body1"  align="center">Loading...</Typography>
           }
         </Container>
     )

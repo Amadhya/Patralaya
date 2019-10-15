@@ -57,14 +57,14 @@ class Feed extends PureComponent {
 
   static async getInitialProps(context){
     const {query} = context;
-
     return {
       query
     }
   }
 
   componentDidMount() {
-    const {actions, loggedIn, query: {filter = ''}} = this.props;
+    const {actions, loggedIn, query} = this.props;
+    const filter = query ? query.filter : '';
 
     if(!loggedIn){
       Router.pushRoute('login');
@@ -127,12 +127,13 @@ class Feed extends PureComponent {
   };
 
   render() {
-    const {pending, success, feed, newPostPending, newPostError, query: {filter = ''}} = this.props;
+    const {pending, success, feed, newPostPending, newPostError, query} = this.props;
     const {newPost, newPostList, category} = this.state;
     const currFeed = [
       ...newPostList,
       ...feed
     ];
+    const filter = query ? query.filter : '';
 
     return(
         <Container>
