@@ -101,7 +101,7 @@ WSGI_APPLICATION = 'PostBook.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'postbook',
+        'NAME': 'qrio',
         'USER': 'postgres',
         'PASSWORD': 'abc',
         'HOST': 'localhost',

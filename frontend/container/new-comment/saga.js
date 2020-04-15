@@ -1,3 +1,6 @@
+import cookie from 'js-cookie';
+import {DOMAIN_URL, BASE_URL} from "../../constants/api";
+
 const ACTIONS = {
   POST: 'NEW_COMMENT_POST',
   POST_SUCCESS: 'NEW_COMMENT_POST_SUCCESS',
@@ -65,22 +68,22 @@ export const getError = state => state.newCommentReducer.error;
 export const getSuccess = state => state.newCommentReducer.success;
 
 //SAGA
-export default function fetchNewCommentDetails(user_id, post_id, comment_text) {
+export default function fetchNewCommentDetails(blog_id, comment_text) {
   return dispatch => {
     dispatch(newCommentPending());
-    return fetch('http://127.0.0.1:8000/api/comment', {
+    return fetch(`${DOMAIN_URL}${BASE_URL}comment`, {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${cookie.get('token')}`,
       },
-      body: JSON.stringify({user_id: user_id, post_id: post_id, comment_text: comment_text})
+      body: JSON.stringify({blog_id: blog_id, comment_text: comment_text})
     })
         .then(res => res.json())
         .then(res => {
-          if(res.status === 400)
-            throw res.message;
-
-          dispatch(newCommentSuccess(res));
+          if(res.status === 200)
+            dispatch(newCommentSuccess(res));
+          else
+            throw res.message;    
         })
         .catch(error => {
           dispatch(newCommentFailure(error))

@@ -1,3 +1,6 @@
+import cookie from 'js-cookie';
+import {DOMAIN_URL, BASE_URL} from "../../constants/api";
+
 const ACTIONS = {
   DELETE: 'COMMENT_DELETE',
   DELETE_SUCCESS: 'COMMENT_DELETE_SUCCESS',
@@ -48,6 +51,8 @@ export function commentDeleteReducer(state=initialState, action) {
     case ACTIONS.DELETE_FAILURE:
       return {
         ...state,
+        pending: false,
+        success: false,
         error: action.error,
       };
     default:
@@ -64,19 +69,18 @@ export const getDeleteSuccess = state => state.commentDeleteReducer.success;
 export default function fetchCommentDeleteDetails(comment_id) {
   return dispatch => {
     dispatch(commentDeletePending());
-    return fetch(`http://127.0.0.1:8000/api/delete_comment`, {
+    return fetch(`${DOMAIN_URL}${BASE_URL}comment/delete/${comment_id}`, {
       method: 'DELETE',
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-      body: JSON.stringify({comment_id: comment_id})
+        Authorization: `Bearer ${cookie.get('token')}`,
+      }
     })
         .then(res => res.json())
         .then(res => {
-          if(res.status === 400)
+          if(res.status === 200)
+            dispatch(commentDeleteSuccess());
+          else  
             throw res.message;
-
-          dispatch(commentDeleteSuccess());
         })
         .catch(error => {
           dispatch(commentDeleteFailure(error))

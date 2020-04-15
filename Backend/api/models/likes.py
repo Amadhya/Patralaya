@@ -1,19 +1,19 @@
 from django.db import models
 
-from .posts import Post
+from .blogs import Blog
 from .users import User
 from .base import BaseModel
 
 
 class LikeManager(models.Manager):
     def filter_like(self, filter_by_both, **kwargs):
-        post = kwargs.get('post')
+        blog = kwargs.get('blog')
         user = kwargs.get('user')
 
         like = None
 
-        if post:
-            like = self.filter(post_field=post)
+        if blog:
+            like = self.filter(blog_field=blog)
             if filter_by_both and not like:
                 return like
 
@@ -28,7 +28,7 @@ class LikeManager(models.Manager):
 
 class Like(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, db_index=True, null=False)
-    post_field = models.ForeignKey(Post, on_delete=models.CASCADE, db_index=True, null=False)
+    blog_field = models.ForeignKey(Blog, on_delete=models.CASCADE, db_index=True, null=False)
 
     objects = LikeManager()
 
@@ -43,8 +43,8 @@ class Like(BaseModel):
     @classmethod
     def create(cls, **kwargs):
         like = Like(
-            user=kwargs.pop('user'),
-            post_field=kwargs.pop('post')
+            user=kwargs.get('user'),
+            blog_field=kwargs.get('blog')
         )
 
         like.save()

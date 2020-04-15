@@ -1,4 +1,5 @@
-import {error} from "next/dist/build/output/log";
+import cookie from 'js-cookie';
+import {DOMAIN_URL, BASE_URL} from "../../constants/api";
 
 const ACTIONS = {
   POST: 'LOGIN_POST',
@@ -64,21 +65,21 @@ export const getError = state => state.loginReducer.error;
 export const getSucces = state => state.loginReducer.success;
 
 //SAGA
-export default function fetchLoginDetails(email, password) {
+export default function fetchLoginDetails(form) {
   return dispatch => {
     dispatch(loginPending());
-    return fetch('http://127.0.0.1:8000/api/login', {
+    return fetch(`${DOMAIN_URL}${BASE_URL}login`, {
       method: 'POST',
-      body: JSON.stringify({email: email,password: password})
+      body: JSON.stringify({...form})
     })
     .then(res => res.json())
     .then(res => {
-      if(res.status === 400)
+      if(res.status === 200){
+        cookie.set('token',res.token);
+        cookie.set('user_id', res.user_id);
+        dispatch(loginSuccess());
+      }else
         throw res.message;
-
-      localStorage.setItem('token', res.token);
-      localStorage.setItem('user_id', res.user_id);
-      dispatch(loginSuccess());
     })
     .catch(error => {
       dispatch(loginFailure(error))

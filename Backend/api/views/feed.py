@@ -6,25 +6,25 @@ from .authorization import authenticate
 
 
 @csrf_exempt
-def get_feed(request):
-    if request.method == 'GET' and authenticate(request):
+def get_blog_feed(request):
+    if request.method == 'GET':
         feed = []
-        filter_post = request.GET.get('filter')
+        filter_blog = request.GET.get('filter')
 
-        if filter_post != '':
-            post_list = Post.objects.filter_by_category(filter_post).order_by('updated_on')
+        if filter_blog != '':
+            blog_list = Blog.objects.filter_by_category(filter_blog).order_by('updated_on')
         else:
-            post_list = Post.objects.all().order_by('updated_on')
+            blog_list = Blog.objects.all().order_by('updated_on')
 
-        for post in reversed(post_list):
-            comment_list = Comment.objects.get_by_post_id(post=post)
-            comments_on_post = []
+        for blog in reversed(blog_list):
+            comment_list = Comment.objects.get_by_blog_id(blog=blog)
+            comments_on_blog = []
 
             for comment in comment_list:
-                comments_on_post.append(comment.serialize())
+                comments_on_blog.append(comment.serialize())
 
             kwargs = {
-                'post': post,
+                'blog': blog,
             }
             likes_list = Like.objects.filter_like(filter_by_both=False, **kwargs)
             likes = []
@@ -33,9 +33,9 @@ def get_feed(request):
                 likes.append(like.serialize())
 
             feed.append({
-                'post': post.serialize(),
+                'blog': blog.serialize(),
                 'likes': likes,
-                'comments': comments_on_post
+                'comments': comments_on_blog
             })
 
         response = {

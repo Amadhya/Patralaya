@@ -1,3 +1,6 @@
+import cookie from 'js-cookie';
+import {DOMAIN_URL, BASE_URL} from "../../constants/api";
+
 const ACTIONS = {
   POST: 'USER_POST',
   POST_SUCCESS: 'USER_POST_SUCCESS',
@@ -65,20 +68,20 @@ export const getError = state => state.userReducer.error;
 export const getSuccess = state => state.userReducer.success;
 
 //SAGA
-export default function fetchUserDetails(user_id) {
+export default function fetchUserDetails() {
   return dispatch => {
     dispatch(userPending());
-    return fetch(`http://127.0.0.1:8000/api/profile/${user_id}`, {
+    return fetch(`${DOMAIN_URL}${BASE_URL}profile`, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${cookie.get('token')}`,
       }
     })
       .then(res => res.json())
       .then(res => {
-        if(res.status === 400)
+        if(res.status === 200)
+          dispatch(userSuccess(res.user));
+        else
           throw res.message;
-
-        dispatch(userSuccess(res.user));
       })
       .catch(error => {
         dispatch(userFailure(error))

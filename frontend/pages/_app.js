@@ -4,6 +4,8 @@ import {Provider} from 'react-redux';
 import {applyMiddleware, createStore} from 'redux';
 import logger from 'redux-logger';
 import thunk from 'redux-thunk';
+import nextCookie from 'next-cookies';
+import cookie from 'js-cookie';
 
 import {Router} from "../routes";
 import rootReducer from "../reducers";
@@ -12,47 +14,56 @@ import Nav from "../components/nav";
 const middlewares = [thunk];
 export const store = createStore(rootReducer,{},applyMiddleware(logger, ...middlewares));
 
+const privateUrl = [
+  "/write_blog",
+  "/settings",
+  "/profile/[id]"
+];
+
 class MyApp extends React.PureComponent{
-  constructor(props){
-    super(props);
-    this.state = {
-      loggedIn: !!(typeof window !== 'undefined' && localStorage.getItem('token')),
-    };
-  }
 
   static async getInitialProps({Component, ctx}){
     let pageProps = {};
+    const {pathname} = ctx;
+    const { token } = nextCookie(ctx)
 
     if(Component.getInitialProps){
       pageProps = await Component.getInitialProps(ctx);
+    } 
+
+    if(typeof token === "undefined"){
+      var found = privateUrl.find(function(element) { 
+        return element == pathname; 
+      });
+      if (found || pathname === "/"){
+        if (typeof window === 'undefined') {
+          ctx.res.writeHead(302, { Location: '/blog_feed' })
+          ctx.res.end()
+        } else {
+          Router.push('/blog_feed')
+        }
+      }
     }
+
+    const loggedIn = !(typeof token === "undefined");
 
     return {
       pageProps,
+      loggedIn, 
     };
-  }
-
-  static getDerivedStateFromProps(props, state){
-    if(typeof window !== 'undefined'){
-      return {
-        loggedIn: !!(localStorage.getItem('token')),
-      }
-    }
-    return state;
   }
 
   handleLogout = () => {
     if(typeof window !== 'undefined'){
-      localStorage.removeItem('token');
-      localStorage.removeItem('user_id');
+      cookie.remove('token')
+      cookie.remove('user_id');
       this.setState({ loggedIn: false });
-      Router.pushRoute('login');
+      Router.pushRoute('blog_feed');
     }
   };
 
   render(){
-    const {Component, pageProps} = this.props;
-    const {loggedIn} = this.state;
+    const {Component, pageProps, loggedIn} = this.props;
 
     return(
       <Provider store={store}>

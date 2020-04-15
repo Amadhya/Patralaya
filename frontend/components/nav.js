@@ -1,36 +1,43 @@
 import React from 'react';
-import RateReviewRoundedIcon from '@material-ui/icons/RateReviewRounded';
-import IconButton from '@material-ui/core/IconButton';
+import {
+  IconButton, MenuItem, Menu, SwipeableDrawer, List, Divider, ListItem, ListItemIcon, ListItemText, Typography, Button
+} from "@material-ui/core";
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 import FlightTakeoffIcon from '@material-ui/icons/FlightTakeoff';
 import EditIcon from '@material-ui/icons/Edit';
 import PollIcon from '@material-ui/icons/Poll';
 import MovieIcon from '@material-ui/icons/Movie';
 import AndroidIcon from '@material-ui/icons/Android';
-import PersonAddRoundedIcon from '@material-ui/icons/PersonAddRounded';
 import RestaurantRoundedIcon from '@material-ui/icons/RestaurantRounded';
 import GradeIcon from '@material-ui/icons/Grade';
 import BubbleChartRoundedIcon from '@material-ui/icons/BubbleChartRounded';
-
-import styled from 'styled-components';
-
-import {Link, Router} from "../routes";
 import DehazeIcon from '@material-ui/icons/Dehaze';
-import {Typography} from "@material-ui/core";
+import styled from 'styled-components';
+import cookie from 'js-cookie';
+
+import {ButtonLayout} from "./button";
+import {Link, Router} from "../routes";
+import Auth from "../pages/auth";
+
 
 const ListWrapper = styled.div`
   display: block;
 `;
 const NavWrapper = styled.div`
-  margin: 0 1rem;
+  margin: 0 2rem;
+`;
+const SlideNavBarWrapper = styled.div`
+  &:hover {
+    cursor: pointer;
+  }
+`;
+const ButtonWrapper = styled(Button)`
+  @media(min-width: 767px){
+    margin-right: 1.5rem !important;
+  }
+`; 
+const MenuWrapper = styled(Menu)`
+  margin-top: 2rem;
 `;
 
 const Categories = [
@@ -72,16 +79,10 @@ class Nav extends React.PureComponent{
   constructor(props){
     super(props);
     this.state={
-      loggedIn: undefined,
       anchorEl: null,
       left: false,
+      popUpWindow: false,
     };
-  }
-
-  static getDerivedStateFromProps(props, state) {
-    return {
-      loggedIn: props.loggedIn === undefined ? props.loggedIn : (!!(typeof window !== 'undefined' && localStorage.getItem('token'))),
-    }
   }
 
   handleMenu = event => {
@@ -104,11 +105,39 @@ class Nav extends React.PureComponent{
   };
 
   handleFilterClick = (filter) => {
-    Router.pushRoute('feed', {filter: filter})
+    Router.pushRoute('blog_feed', {filter: filter})
+  };
+
+  handleProfileClick = (id) => {
+    this.handleClose();
+    Router.pushRoute(`/profile/${cookie.get('user_id')}`);
+  };
+
+  handleSettingsClick = () => {
+    this.handleClose();
+    Router.pushRoute('settings');
+  };
+
+  handleWriteClick = () => {
+    Router.pushRoute('write_blog');
+  };
+
+  handleGetStarted = () => {
+    this.setState({
+      popUpWindow: true,
+    });
+  };
+
+  handleClosePopUpWindow = () => {
+    this.setState({
+      popUpWindow: false,
+    });
   };
 
   render() {
-    const {loggedIn, anchorEl} = this.state;
+    const {anchorEl, popUpWindow} = this.state;
+    const {loggedIn} = this.props;
+    
     const open = Boolean(anchorEl);
 
     const toggleDrawer = (side, open) => event => {
@@ -141,7 +170,7 @@ class Nav extends React.PureComponent{
 
     return(
       <nav>
-        <div>
+        <SlideNavBarWrapper>
           <DehazeIcon onClick={toggleDrawer('left', true)}/>
           <SwipeableDrawer
               open={this.state.left}
@@ -150,64 +179,59 @@ class Nav extends React.PureComponent{
           >
             {sideList('left')}
           </SwipeableDrawer>
-        </div>
+        </SlideNavBarWrapper>
         <div>
-          <RateReviewRoundedIcon fontSize="large"/>
-          <Link route="feed">
+          <Link route="blog_feed">
             <h1>
               Patralaya
             </h1>
           </Link>
         </div>
         <div>
-          <IconButton
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={(e) => this.handleMenu(e)}
-              color="inherit"
-          >
-            {loggedIn ? <AccountCircle/> : <PersonAddRoundedIcon/>}
-          </IconButton>
-          <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={open}
-              onClose={() => this.handleClose()}
-          >
-            {loggedIn ?
-              <ListWrapper>
-                <MenuItem onClick={() => this.handleClose()}>
-                  <Link to={'/profile/'+localStorage.getItem('user_id')}>
-                    <p>Profile</p>
-                  </Link>
-                </MenuItem>
-                <MenuItem onClick={() => this.handleLogout()}>Logout</MenuItem>
-              </ListWrapper>
-              :
-              <ListWrapper>
-                <MenuItem onClick={() => this.handleClose()}>
-                  <Link route="login">
-                    <p>Login</p>
-                  </Link>
-                </MenuItem>
-                <MenuItem onClick={() => this.handleClose()}>
-                  <Link route="signup">
-                    <p>SignUp</p>
-                  </Link>
-                </MenuItem>
-              </ListWrapper>
-            }
-          </Menu>
+          <ButtonWrapper onClick={() => this.handleWriteClick()}>Write</ButtonWrapper>
+          {loggedIn ? (
+            <div>
+              <IconButton
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={(e) => this.handleMenu(e)}
+                  color="inherit"
+              >
+                <AccountCircle/>
+              </IconButton>
+              <MenuWrapper
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={open}
+                  onClose={() => this.handleClose()}
+              >
+                <ListWrapper>
+                  <MenuItem onClick={() => this.handleProfileClick()}>
+                    Profile
+                  </MenuItem>
+                  <MenuItem onClick={() => this.handleSettingsClick()}>
+                    Settings
+                  </MenuItem>
+                  <MenuItem onClick={() => this.handleLogout()}>
+                    Logout
+                  </MenuItem>
+                </ListWrapper>
+              </MenuWrapper>
+            </div>
+          ):(
+            <ButtonLayout variant="outlined" onClick={() => this.handleGetStarted()}>Get Started</ButtonLayout>
+          )}
+          <Auth open={popUpWindow} handleClose={() => this.handleClosePopUpWindow()}/>
         </div>
         <style jsx>{`
           :global(body) {
@@ -220,12 +244,11 @@ class Nav extends React.PureComponent{
             align-items: center;
             justify-content: space-around;
             text-align: center;
-            box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 2px 1px -1px rgba(0,0,0,0.12);
+            box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.05);
             margin-bottom: 3rem;
             position: fixed;
             width: 100%;
-            background: linear-gradient(56.99deg,#f50057 0%,#ff3f3f 100%);
-            color: white;
+            background: white;
           }
           div {
             display: flex;
@@ -251,4 +274,4 @@ class Nav extends React.PureComponent{
   }
 }
 
-export default Nav
+export default Nav;

@@ -1,3 +1,6 @@
+import cookie from 'js-cookie';
+import {DOMAIN_URL, BASE_URL} from "../../constants/api";
+
 const ACTIONS = {
   DELETE: 'UNLIKE_DELETE',
   DELETE_SUCCESS: 'UNLIKE_DELETE_SUCCESS',
@@ -61,22 +64,22 @@ export const getError = state => state.unlikeReducer.error;
 export const getSuccess = state => state.unlikeReducer.success;
 
 //SAGA
-export default function fetchUnlikeDetails(post_id, user_id) {
+export default function fetchUnlikeDetails(blog_id) {
   return dispatch => {
     dispatch(unlikePending());
-    return fetch(`http://127.0.0.1:8000/api/unlike`, {
+    return fetch(`${DOMAIN_URL}${BASE_URL}unlike`, {
       method: 'DELETE',
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${cookie.get('token')}`,
       },
-      body: JSON.stringify({post_id: post_id, user_id: user_id})
+      body: JSON.stringify({blog_id: blog_id})
     })
         .then(res => res.json())
         .then(res => {
-          if(res.status === 400)
+          if(res.status === 200)
+            dispatch(unlikeSuccess());
+          else
             throw res.message;
-
-          dispatch(unlikeSuccess());
         })
         .catch(error => {
           dispatch(unlikeFailure(error))

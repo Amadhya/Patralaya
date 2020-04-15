@@ -68,10 +68,112 @@ def signin(request):
 
 
 @csrf_exempt
-def user_profile(request, user_id):
-    if request.method == 'GET' and authenticate(request):
-        user = User.objects.get_by_id(user_id)
+def user_profile(request):
+    is_auth, email = authenticate(request)
+    if request.method == 'GET' and is_auth:
+        user = User.objects.get_by_email(email)
         response = {
+            'status': 200,
             'user': user.serialize(),
         }
         return JsonResponse(response)
+
+
+@csrf_exempt
+def edit_user_details(request):
+    if request.method == 'PATCH':
+        isAuth, email = authenticate(request)
+        if isAuth:
+            response = {}
+
+            body = json.loads(request.body)
+
+            user = User.objects.get_by_email(email)
+
+            if body.get('first_name') is not None:
+                user.first_name = body.pop('first_name')
+            
+            if body.get('last_name') is not None:
+                user.last_name = body.pop('last_name')
+
+            if body.get('email') is not None:
+                user.email = body.pop('email')
+                payload = {
+                    'email': user.email,
+                    'password': user.password,
+                }
+
+                jwt_token = {'token': jwt.encode(payload, "SECRET_KEY").decode('utf-8')}
+                response = {
+                    'token': jwt_token.get('token'),
+                }
+            
+            user.save()
+            response = {
+                'status': 200,
+                'message': 'Successfully changed',
+                **response
+            }
+            
+            return JsonResponse(response, status=200)
+        
+        response = {
+            'status': 400,
+            'message': 'Not authorized to change the credentials',
+        }
+
+        return JsonResponse(response, status=400)
+
+    response = {
+        'status': 400,
+        'message': 'Invalid request method',
+    }
+
+    return JsonResponse(response, status=400)
+
+
+@csrf_exempt
+def change_password(request):
+    if request.method == 'PATCH':
+        isAuth, email = authenticate(request)
+        if isAuth:
+            body = json.loads(request.body)
+            user = User.objects.get_by_email(email)
+    
+            if check_password(body.pop('current_password'), user.password):
+                user.set_password(body.pop('new_password'))
+                user.save()
+
+                payload = {
+                    'email': user.email,
+                    'password': user.password,
+                }
+                jwt_token = {'token': jwt.encode(payload, "SECRET_KEY").decode('utf-8')}
+
+                response = {
+                    'status': 200,
+                    'token': jwt_token.get('token'),
+                }
+
+                return JsonResponse(response, status=200)
+
+            response = {
+                'status': 400,
+                'message': 'Current Password incorrect',
+            }
+
+            return JsonResponse(response, status=400)
+        
+        response = {
+            'status': 400,
+            'message': 'Not authorized to change the credentials',
+        }
+
+        return JsonResponse(response, status=400)
+
+    response = {
+        'status': 400,
+        'message': 'Invalid request method',
+    }
+
+    return JsonResponse(response, status=400)

@@ -1,3 +1,6 @@
+import cookie from 'js-cookie';
+import {DOMAIN_URL, BASE_URL} from "../../constants/api";
+
 const ACTIONS = {
   POST: 'SIGNUP_POST',
   POST_SUCCESS: 'SIGNUP_POST_SUCCESS',
@@ -61,27 +64,21 @@ export const getSuccess = state => state.signupReducer.success;
 export const getError = state => state.loginReducer.error;
 
 //SAGA
-export default function fetchSignUpDetails(email, password, firstName, lastName) {
+export default function fetchSignUpDetails(form) {
   return dispatch => {
     dispatch(signupPending());
-    return fetch('http://127.0.0.1:8000/api/signup', {
+    return fetch(`${DOMAIN_URL}${BASE_URL}signup`, {
       method: 'POST',
-      body: JSON.stringify({
-        email: email,
-        password: password,
-        first_name: firstName,
-        last_name: lastName
-      })
+      body: JSON.stringify({...form})
     })
     .then(res => res.json())
     .then(res => {
-      if(res.status === 400)
+      if(res.status === 200){
+        cookie.set('token',res.token);
+        cookie.set('user_id', res.user_id);
+        dispatch(signupSuccess());
+      }else
         throw res.message;
-
-      localStorage.setItem('token', res.token);
-      localStorage.setItem('user_id', res.user_id);
-      dispatch(signupSuccess());
-
     })
     .catch(error => {
       dispatch(signupFailure(error))

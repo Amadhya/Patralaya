@@ -1,10 +1,10 @@
 import React from 'react';
 
-import Feed from "./feed";
+import BlogFeed from "./blog_feed";
 const Home = ({loggedIn}) => {
   return (
     <div>
-      <Feed loggedIn={loggedIn}/>
+      <BlogFeed/>
     </div>
   );
 };

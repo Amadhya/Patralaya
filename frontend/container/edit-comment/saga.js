@@ -1,3 +1,6 @@
+import cookie from 'js-cookie';
+import {DOMAIN_URL, BASE_URL} from "../../constants/api";
+
 const ACTIONS = {
   PATCH: 'COMMENT_EDIT',
   PATCH_SUCCESS: 'COMMENT_EDIT_SUCCESS',
@@ -56,27 +59,27 @@ export function commentEditReducer(state=initialState, action) {
 }
 
 //SELECTORS
-export const getDeleteStatus = state => state.commentEditReducer.pending;
-export const getDeleteError = state => state.commentEditReducer.error;
-export const getDeleteSuccess = state => state.commentEditReducer.success;
+export const getStatus = state => state.commentEditReducer.pending;
+export const getError = state => state.commentEditReducer.error;
+export const getSuccess = state => state.commentEditReducer.success;
 
 //SAGA
 export default function fetchCommentEditDetails(comment_id,edit_text) {
   return dispatch => {
     dispatch(commentEditPending());
-    return fetch(`http://127.0.0.1:8000/api/comment/edit/${comment_id}`, {
+    return fetch(`${DOMAIN_URL}${BASE_URL}comment/edit/${comment_id}`, {
       method: 'PATCH',
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${cookie.get('token')}`,
       },
       body: JSON.stringify({comment_text: edit_text})
     })
       .then(res => res.json())
       .then(res => {
-        if(res.status === 400)
+        if(res.status === 200)
+          dispatch(commentEditSuccess());
+        else
           throw res.message;
-
-        dispatch(commentEditSuccess());
       })
       .catch(error => {
         dispatch(commentEditFailure(error))
