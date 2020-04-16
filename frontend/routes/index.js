@@ -6,6 +6,7 @@ const allRoutes=[
   ['write_blog','/write_blog','/write_blog'],
   ['blog_feed', '/blog_feed', '/blog_feed'],
   ['profile', '/profile/[id]', '/profile'],
+  ['tag', '/tag/[title]', '/tag'],
   ['settings', '/settings', '/settings'],
 ];
 

@@ -301,6 +301,10 @@ class Content extends PureComponent {
     );
   };
 
+  onTagClick = (title) => {
+    Router.pushRoute('/tag/'+title);
+  }
+
   handleSnackBarClose = () => {
     this.setState({
         openSnackBar: false,
@@ -384,7 +388,7 @@ class Content extends PureComponent {
             <Separator/>
             <Row>
               {tags.map(item => (
-                <TagsWrapper key={item} variant="outlined" color="primary">
+                <TagsWrapper key={item} variant="outlined" color="primary" onClick={() => this.onTagClick(item)}>
                   {item}
                 </TagsWrapper>
               ))}

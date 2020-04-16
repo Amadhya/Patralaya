@@ -20,4 +20,5 @@ urlpatterns = [
     path('signup', signin, name='signup'),
     path('user/profile/edit', edit_user_details, name='edit user details'),
     path('user/password/edit', change_password, name='change password'),
+    path('tag/<str:tag_title>', tag_blogs, name='blog associated with tag')
 ]

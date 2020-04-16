@@ -52,35 +52,35 @@ const handleReadMore = (blog_id) => {
 }
 
 const BlogCard = ({blogObj}) => (
-    <CardWrapper key={blogObj.blog.blog_text}>
+    <CardWrapper key={blogObj.blog_text}>
       <CardHeader
           title={
             <Typography variant="h5">
-              {blogObj.blog.title}
+              {blogObj.title}
             </Typography>
           }
           subheader={
             <Typography variant="body1" color="textSecondary">
-              {blogObj.blog.category}
+              {blogObj.category}
             </Typography>
           }
       />
       <CardContentWrapper>
         <TypographyWrapper variant="body1" color="textSecondary" gutterBottom noWrap>
-          {blogObj.blog.blog_text}
+          {blogObj.blog_text}
         </TypographyWrapper>
         <Separator/>
         <Row>
           <Col sm={10} xs={12}>
             <Typography variant="body1" color="textSecondary" gutterBottom>
-              By {blogObj.blog.user.first_name+' '+blogObj.blog.user.last_name}
+              By {blogObj.user.first_name+' '+blogObj.user.last_name}
             </Typography>
             <Typography variant="body2" color="textSecondary">
-              {dateTime(blogObj.blog.created_on)}
+              {dateTime(blogObj.created_on)}
             </Typography>
           </Col>
           <ColWrapper sm={2} xs={12}>
-            <ButtonWrapper color="primary" onClick={() => handleReadMore(blogObj.blog.id)}>
+            <ButtonWrapper color="primary" onClick={() => handleReadMore(blogObj.id)}>
               Read More
             </ButtonWrapper>
           </ColWrapper>

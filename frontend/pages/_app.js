@@ -65,8 +65,6 @@ class MyApp extends React.PureComponent{
   render(){
     const {Component, pageProps, loggedIn} = this.props;
 
-    console.log(loggedIn, 'in app---');
-
     return(
       <Provider store={store}>
         <Nav handleLogout={() => this.handleLogout()} loggedIn={loggedIn}/>

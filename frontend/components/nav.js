@@ -86,6 +86,15 @@ class Nav extends React.PureComponent{
     };
   }
 
+  static getDerivedStateFromProps(props, state){
+    const {loggedIn} = props;
+
+    return {
+      loggedIn,
+      ...state
+    }
+  }
+
   handleMenu = event => {
     this.setState({
       anchorEl: event.target,
@@ -101,6 +110,7 @@ class Nav extends React.PureComponent{
   handleLogout = () => {
     this.setState({
       anchorEl: null,
+      loggedIn: false,
     });
     this.props.handleLogout()
   };
@@ -111,6 +121,7 @@ class Nav extends React.PureComponent{
 
   handleProfileClick = (id) => {
     this.handleClose();
+    Router.pushRoute('/profile/'+cookie.get('user_id'));
   };
 
   handleSettingsClick = () => {
@@ -138,15 +149,12 @@ class Nav extends React.PureComponent{
   handleClosePopUpWindow = () => {
     this.setState({
       popUpWindow: false,
+      loggedIn: true,
     });
   };
 
   render() {
-    const {anchorEl, popUpWindow} = this.state;
-    const {loggedIn} = this.props;
-
-    console.log(loggedIn, cookie.get('token'), 'in nav---');
-    
+    const {anchorEl, popUpWindow, loggedIn} = this.state;
     const open = Boolean(anchorEl);
 
     const toggleDrawer = (side, open) => event => {

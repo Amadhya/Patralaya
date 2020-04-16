@@ -80,7 +80,8 @@ class PopUpWindow extends PureComponent{
                     openSnackBar: true,
                     isClicked: false,
                     tagArray: []
-                }, () => {handleClose()});
+                });
+                handleClose();
                 Router.pushRoute(`/blog/${blog.id}`);
             }else if(error){
                 this.setState({

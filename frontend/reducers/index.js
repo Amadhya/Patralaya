@@ -17,6 +17,7 @@ import {blogDeleteReducer} from "../container/delete-blog/saga";
 import {blogEditReducer} from "../container/edit-blog/saga";
 import {commentDeleteReducer} from "../container/delete-comment/saga";
 import {commentEditReducer} from "../container/edit-comment/saga";
+import {tagBlogsReducer} from "../container/tag_blog/saga";
 
 const rootReducer = combineReducers({
     loginReducer, 
@@ -35,7 +36,8 @@ const rootReducer = combineReducers({
     commentEditReducer, 
     commentDeleteReducer, 
     likeReducer, 
-    unlikeReducer
+    unlikeReducer,
+    tagBlogsReducer
 });
 
 export default rootReducer;

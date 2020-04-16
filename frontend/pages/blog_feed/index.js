@@ -55,7 +55,7 @@ class BlogFeed extends PureComponent {
           {!pending && success ?
             <FeedWrapper sm={8} xs={12}>
               {feed.map(obj => (
-                <BlogCard blogObj={obj} key={obj.blog.id}/>
+                <BlogCard blogObj={obj.blog} key={obj.blog.id}/>
               ))}
               {typeof error !== "undefined" && error && (
                 <Typography variant="body1" color="textSecondary" align="center">There was some error loading blogs.</Typography>
