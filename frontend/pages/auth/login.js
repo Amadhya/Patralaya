@@ -1,13 +1,14 @@
 import React, { PureComponent, Fragment } from "react";
 import Head from 'next/head'
-import { Typography } from '@material-ui/core';
+import { Typography, Snackbar } from '@material-ui/core';
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
+import MuiAlert from '@material-ui/lab/Alert';
 
-import {Router} from "../../routes";
 import {FlexView, Separator} from "../../components/layout";
 import {ButtonLayout} from "../../components/button";
 import TextFieldInput from "../../components/textfield";
+import {CircularProgressWrapper} from "../../components/progress";
 import fetchLoginDetails, {getSucces, getError, getStatus} from "../../container/login/saga";
 
 const Form = [
@@ -29,6 +30,10 @@ const Form = [
   },
 ];
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 class Login extends PureComponent{
  constructor(props){
    super(props);
@@ -39,24 +44,30 @@ class Login extends PureComponent{
       },
       isClicked: false,
       emptyFields: false,
+      openSnackBar: false,
    }
  }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const { success, pending, onClose } = this.props;
+    const { success, pending, onClose, error } = this.props;
+    const { isClicked } = this.state;
 
-    if(typeof pending !== "undefined" && !pending){
-      if(typeof success !== "undefined" && success){
+    if(isClicked){
+      if(typeof pending !== "undefined" && !pending && typeof success !== "undefined" && success){
         this.setState({
           isClicked: false,
+          openSnackBar: true,
           form: {
             'email': '',
             'password': ''
           },
-        }, () => {
-          onClose();
         });
-        Router.pushRoute('blog_feed');
+        onClose();
+      }else if(error){
+        this.setState({
+          isClicked: false,
+          openSnackBar: true,
+        })
       }
     }
   }
@@ -78,28 +89,49 @@ class Login extends PureComponent{
     const {form} = this.state;
     const {actions} = this.props;
 
-    if(form['email'] !=='' && form['password'] !=='')
-      actions.fetchLoginDetails(form);
-    else{
+    if(form['email'] !=='' && form['password'] !==''){
       this.setState({
+        isClicked: true,
+      });
+      actions.fetchLoginDetails(form);
+    }else{
+      this.setState({
+        isClicked: true,
         emptyFields: true,
       })
     };
-
-    this.setState({
-      isClicked: true,
-    });
   };
 
+  handleSnackBarClose = () => {
+    this.setState({
+        openSnackBar: false,
+    })
+  }
+
  render() {
-   const {isClicked, form, emptyFields} = this.state;
+   const {isClicked, form, emptyFields, openSnackBar} = this.state;
    const {error, handleBack} = this.props;
 
    return (
     <FlexView reverse={true} alignItems="center" justify="center">
         <Head>
-            <title>Log In</title>
+            <title>Sign In</title>
         </Head>
+        <Snackbar
+            anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+            }}
+            autoHideDuration={2000}
+            open={ openSnackBar }
+            onClose={() => this.handleSnackBarClose()}
+        >
+            {error ? (
+                <Alert severity="error">There was an error in signing you up.</Alert>
+            ):(
+                <Alert severity="success">Signed In Successfully.</Alert>
+            )}
+        </Snackbar>
         <Typography component="h1" variant="h5" align="center">
             Sign in with Email
         </Typography>
@@ -138,8 +170,12 @@ class Login extends PureComponent{
             <Separator/>
             </Fragment>
         )}
-        <ButtonLayout variant="contained" onClick={() => this.onSubmit()}>
-          Log In
+        <ButtonLayout 
+          variant="contained" 
+          endIcon={isClicked && !emptyFields && <CircularProgressWrapper/>}
+          onClick={() => this.onSubmit()}
+        >
+          Sign In
         </ButtonLayout>
         <Separator/>
         <ButtonLayout onClick={handleBack}>

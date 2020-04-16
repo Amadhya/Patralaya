@@ -1,11 +1,12 @@
 import React, {Fragment, PureComponent} from "react";
-import { Typography } from '@material-ui/core';
+import { Typography, Snackbar } from '@material-ui/core';
 import { connect  } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import MuiAlert from '@material-ui/lab/Alert';
 
-import {Router} from "../../routes";
 import {FlexView, Separator} from "../../components/layout";
 import {ButtonLayout} from "../../components/button";
+import {CircularProgressWrapper} from "../../components/progress";
 import TextFieldInput from "../../components/textfield";
 import fetchSignUpDetails, {getSuccess, getError, getStatus} from "../../container/signup/saga";
 
@@ -46,6 +47,10 @@ const Form2 = [
   },
 ];
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 class SignUp extends PureComponent{
   constructor(props){
     super(props);
@@ -60,16 +65,19 @@ class SignUp extends PureComponent{
       isClicked: false,
       next: false,
       emptyFields: false,
+      openSnackBar: false,
     }
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const { success, pending, onClose } = this.props;
+    const { success, pending, onClose, error } = this.props;
+    const {isClicked} = this.state;
 
-    if(typeof pending !== "undefined" && !pending){
-      if(typeof success !== "undefined" && success){
+    if(isClicked){
+      if(typeof pending !== "undefined" && !pending && typeof success !== "undefined" && success){
         this.setState({
             isClicked: false,
+            openSnackBar: true,
             form: {
               'first_name': '',
               'last_name': '',
@@ -77,8 +85,13 @@ class SignUp extends PureComponent{
               'email': '',
               'password': ''
             },
-        }, () => {onClose();});
-        Router.pushRoute('blog_feed');
+        });
+        onClose();
+      }else if(error){
+        this.setState({
+          isClicked: false,
+          openSnackBar: true,
+        })
       }
     }
   }
@@ -135,12 +148,33 @@ class SignUp extends PureComponent{
     });
   };
 
+  handleSnackBarClose = () => {
+    this.setState({
+        openSnackBar: false,
+    })
+  }
+
   render() {
-    const {isClicked, form, next, emptyFields} = this.state;
+    const {isClicked, form, next, emptyFields, openSnackBar} = this.state;
     const {error, handleBack} = this.props;
 
     return (
       <FlexView reverse={true} alignItems="center" justify="center">
+        <Snackbar
+            anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+            }}
+            autoHideDuration={2000}
+            open={ openSnackBar }
+            onClose={() => this.handleSnackBarClose()}
+        >
+            {error ? (
+                <Alert severity="error">There was an error in signing you up.</Alert>
+            ):(
+                <Alert severity="success">Signed Up Successfully.</Alert>
+            )}
+        </Snackbar>
         <Typography component="h1" variant="h5" align="center">
           Sign Up with Email
         </Typography>
@@ -181,8 +215,13 @@ class SignUp extends PureComponent{
                         <Separator/>
                     </Fragment>
                 )}
-                <ButtonLayout variant="contained" color="primary" onClick={() => this.onSubmit()}>
-                    Sign Up
+                <ButtonLayout 
+                  variant="contained" 
+                  color="primary" 
+                  endIcon={isClicked && !emptyFields && <CircularProgressWrapper/>}
+                  onClick={() => this.onSubmit()}
+                >
+                  Sign Up
                 </ButtonLayout>
                 <Separator/>
                 <ButtonLayout onClick={() => this.handleNextBack()}>

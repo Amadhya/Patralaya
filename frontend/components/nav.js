@@ -76,6 +76,7 @@ const Categories = [
 ];
 
 class Nav extends React.PureComponent{
+
   constructor(props){
     super(props);
     this.state={
@@ -110,7 +111,6 @@ class Nav extends React.PureComponent{
 
   handleProfileClick = (id) => {
     this.handleClose();
-    Router.pushRoute(`/profile/${cookie.get('user_id')}`);
   };
 
   handleSettingsClick = () => {
@@ -119,7 +119,14 @@ class Nav extends React.PureComponent{
   };
 
   handleWriteClick = () => {
-    Router.pushRoute('write_blog');
+    const {loggedIn} = this.props;
+
+    if(loggedIn)
+      Router.pushRoute('write_blog');
+    else
+      this.setState({
+        popUpWindow: true,
+      });
   };
 
   handleGetStarted = () => {
@@ -137,6 +144,8 @@ class Nav extends React.PureComponent{
   render() {
     const {anchorEl, popUpWindow} = this.state;
     const {loggedIn} = this.props;
+
+    console.log(loggedIn, cookie.get('token'), 'in nav---');
     
     const open = Boolean(anchorEl);
 
@@ -231,7 +240,7 @@ class Nav extends React.PureComponent{
           ):(
             <ButtonLayout variant="outlined" onClick={() => this.handleGetStarted()}>Get Started</ButtonLayout>
           )}
-          <Auth open={popUpWindow} handleClose={() => this.handleClosePopUpWindow()}/>
+          <Auth open={popUpWindow} handleClose={(e) => this.handleClosePopUpWindow()}/>
         </div>
         <style jsx>{`
           :global(body) {

@@ -1,6 +1,6 @@
 from django.db import models
 from .users import User
-
+from .tags import Tag
 from .base import BaseModel
 
 
@@ -19,6 +19,7 @@ class Blog(BaseModel):
     title = models.TextField(null=False, default='')
     blog_text = models.TextField(null=False, default='')
     user = models.ForeignKey(User, on_delete=models.CASCADE, db_index=True, null=False)
+    tags = models.ManyToManyField(Tag)
     category = models.CharField(max_length=50, null=False, default="general")
 
     objects = BlogManager()

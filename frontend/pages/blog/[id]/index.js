@@ -1,42 +1,13 @@
-import React, {PureComponent, Fragment} from "react";
+import React, {PureComponent} from "react";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'next/router';
-import {
-  Typography, Button, TextField, Box, InputLabel, FormControl, Select, Avatar, IconButton
-} from '@material-ui/core';
-import styled from 'styled-components';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import {Typography} from "@material-ui/core";
 
-import {Row, Col, FlexView, Separator, Container} from "../../../components/layout";
+import {Col, Container} from "../../../components/layout";
 import Content from "./content";
 import CommentsSection from "./comments_section";
-import fetchBlog , {getSuccess, getError, getStatus, getBlog, getBlogComments, getBlogLikes} from "../../../container/blog/saga";
-
-const AvatarWrapper = styled(Avatar)`
-  background-color: #f44336 !important;
-  margin-right: 0.5rem;
-`;
-const ColWrapper = styled(Col)`
-  display: flex !important;
-  justify-content: flex-end;
-`;
-
-const monthNames = ["January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
-];
-
-function dateTime (t){
-  let newDate=new Date(t);
-
-  let date = newDate.getDate();
-  let month = newDate.getMonth();
-  let year = newDate.getFullYear();
-  let hour = newDate.getHours();
-  let min = newDate.getMinutes(); 
-
-  return `${monthNames[month]} ${date}, ${year} at ${hour}:${min} (IST)`
-}
+import fetchBlog , {getSuccess, getError, getStatus, getBlog, getBlogComments, getBlogLikes, getTags} from "../../../container/blog/saga";
 
 class Blog extends PureComponent {
 
@@ -54,12 +25,15 @@ class Blog extends PureComponent {
   }
 
   render() {
-    const {blog=null, blogComments, likes, loggedIn} = this.props;
+    const {blog=null, blogComments, likes, tags, loggedIn} = this.props;
+
+    if(!blog)
+      return <Typography variant="body1" >Loading...</Typography>
 
     return(
         <Container>
           <Col smOffset={2} sm={8} xs={12}>
-            {blog && <Content blog={blog} likes={likes} loggedIn={loggedIn}/>}
+            {blog && <Content blog={blog} likes={likes} tags={tags} loggedIn={loggedIn}/>}
             {blog && <CommentsSection blogId={blog.id} blogComments={blogComments} loggedIn={loggedIn}/>}
           </Col>
         </Container>
@@ -70,6 +44,7 @@ class Blog extends PureComponent {
 
 const mapStateToProps = (state) => ({
   blog: getBlog(state),
+  tags: getTags(state),
   blogComments: getBlogComments(state),
   likes: getBlogLikes(state),
   error: getError(state),

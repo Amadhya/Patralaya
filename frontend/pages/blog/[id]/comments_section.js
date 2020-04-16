@@ -1,16 +1,15 @@
 import React, {PureComponent} from "react";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {Box, TextField, Avatar} from "@material-ui/core";
-import styled from 'styled-components';
-import IconButton from "@material-ui/core/IconButton";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import {TextField, Snackbar} from "@material-ui/core";
 import CommentCard from "./comment_card";
+import MuiAlert from '@material-ui/lab/Alert';
 
 import fetchNewCommentDetails, {getNewComment, getSuccess, getError, getStatus} from "../../../container/new-comment/saga";
-import {ButtonLayout} from "../../../components/button";
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 class CommentsSection extends PureComponent{
   
@@ -20,6 +19,7 @@ class CommentsSection extends PureComponent{
       comment_text: '',
       isClicked: false,
       newCommentList: this.props.blogComments,
+      openSnackBar: false,
     };
   }
 
@@ -49,7 +49,9 @@ class CommentsSection extends PureComponent{
     const {comment_text} = this.state;
 
     if(!loggedIn){
-      
+      this.setState({
+        openSnackBar: true,
+      })
     }else{
       actions.fetchNewCommentDetails(blogId,comment_text);
 
@@ -60,11 +62,28 @@ class CommentsSection extends PureComponent{
     }
   };
 
+  handleSnackBarClose = () => {
+    this.setState({
+        openSnackBar: false,
+    })
+  };
+
   render() {
-    const {comment_text, newCommentList} = this.state;
+    const {comment_text, newCommentList, openSnackBar} = this.state;
 
     return(
       <div>
+        <Snackbar
+            anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+            }}
+            autoHideDuration={2500}
+            open={openSnackBar}
+            onClose={() => this.handleSnackBarClose()}
+        >
+            <Alert severity="info">Please login to add a comment.</Alert>
+        </Snackbar>
         <TextField
             id="outlined-textarea"
             label="Add a comment..."

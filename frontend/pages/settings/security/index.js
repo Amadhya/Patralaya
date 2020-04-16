@@ -6,6 +6,7 @@ import {connect} from "react-redux";
 
 import {ButtonLayout} from ".../../../components/button";
 import TextFieldInput from ".../../../components/textfield";
+import {CircularProgressWrapper} from "../../../components/progress";
 import {Col, Separator} from "../../../components/layout";
 import fetchPasswordChange, {getError, getStatus, getSuccess} from "../../../container/change_password/saga";
 
@@ -17,6 +18,7 @@ const TypographySuccess = styled(Typography)`
 `;
 
 class Security extends PureComponent{
+
   constructor(props){
     super(props);
     this.state={
@@ -33,13 +35,19 @@ class Security extends PureComponent{
     const {success, pending} = this.props;
     const {isClicked} = this.state;
 
-    if(isClicked && typeof pending !== "undefined" && typeof success !== "undefined" && !pending && success){
-      this.setState({
-        isClicked: false,
-        current: '',
-        newPassword: '',
-        rePassword: '',
-      });
+    if(isClicked){
+      if(typeof pending !== "undefined" && typeof success !== "undefined" && !pending && success){
+        this.setState({
+          isClicked: false,
+          current: '',
+          newPassword: '',
+          rePassword: '',
+        });
+      }else if(error){
+        this.setState({
+          isClicked: false,
+        });
+      }
     }
   }
 
@@ -155,8 +163,12 @@ class Security extends PureComponent{
             <Separator height={2}/>
           </Fragment>
         )}
-        <ButtonLayout variant="contained" color="primary"
-         onClick={() => this.handlePasswordSubmit()}>
+        <ButtonLayout 
+          variant="contained" 
+          color="primary"
+          endIcon={isClicked && <CircularProgressWrapper/>}
+          onClick={() => this.handlePasswordSubmit()}
+        >
            Update Password
         </ButtonLayout>
         <Separator height={2}/>

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'next/router';
 import {
-  Typography, TextField, Snackbar, Menu, MenuItem, Avatar, IconButton
+  Typography, TextField, Snackbar, Menu, MenuItem, Avatar, IconButton, Button
 } from '@material-ui/core';
 import styled from 'styled-components';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -52,15 +52,9 @@ const TypographyWrapper = styled(Typography)`
     padding-right: 0.5rem;
   }
 `;
-const SocialShareMobileWrapper = styled(SocialShare)`
-  @media(min-width: 767px){
-    display: none;
-  }
-`;
-const SocialShareDesktopWrapper = styled(SocialShare)`
-  @media(max-width: 767px){
-    display: none;
-  }
+const TagsWrapper = styled(ButtonLayout)`
+  margin-right: 1rem !important;
+  margin-bottom: 1rem !important;
 `;
 
 const monthNames = ["January", "February", "March", "April", "May", "June",
@@ -154,9 +148,13 @@ class Content extends PureComponent {
 
   onLikeButtonClick = () => {
     const {like, noOfLikes} = this.state;
-    const {actions, blog} = this.props;
+    const {actions, blog, loggedIn} = this.props;
 
-    if(typeof window !== "undefined"){
+    if(!loggedIn){
+      this.setState({
+        openSnackBar: true,
+      });
+    }else if(typeof window !== "undefined"){
 
       if(!like){
         actions.fetchLikeDetails(blog.id);
@@ -309,9 +307,22 @@ class Content extends PureComponent {
     })
   };
 
+  renderSnackBar = () => {
+    const {error, loggedIn} = this.props;
+    const {deleteError} = this.state;
+
+    if(error || deleteError)
+      return <Alert severity="error">There was an error. Please try again.</Alert>
+
+    if(!loggedIn)
+      return <Alert severity="info">Please login to like the blog.</Alert>
+
+    return <Alert severity="success">Blog was successfully edited.</Alert>
+  }
+
 
   render() {
-    const {blog, error, deleteError} = this.props;
+    const {blog, tags} = this.props;
     const {like, noOfLikes, edit, openSnackBar} = this.state;
 
     return(
@@ -321,15 +332,11 @@ class Content extends PureComponent {
                 vertical: 'bottom',
                 horizontal: 'left',
             }}
-            autoHideDuration={2000}
+            autoHideDuration={2500}
             open={openSnackBar}
             onClose={() => this.handleSnackBarClose()}
         >
-            {error || deleteError ? (
-                <Alert severity="error">There was an error. Please try again.</Alert>
-            ):(
-                <Alert severity="success">Blog was successfully edited.</Alert>
-            )}
+            {this.renderSnackBar()}
         </Snackbar>
         {edit ? this.renderEditBlog() 
           : 
@@ -374,6 +381,14 @@ class Content extends PureComponent {
             <TypographyWrapper variant="body1">
                 {blog.blog_text}
             </TypographyWrapper>
+            <Separator/>
+            <Row>
+              {tags.map(item => (
+                <TagsWrapper key={item} variant="outlined" color="primary">
+                  {item}
+                </TagsWrapper>
+              ))}
+            </Row>
             <Separator/>
             <Row>
                 <Col md={6} sm={12} xs={12}>

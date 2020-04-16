@@ -6,6 +6,7 @@ import {connect} from "react-redux";
 
 import {FlexView, Separator, Col} from "../../../components/layout";
 import TextFieldInput from "../../../components/textfield";
+import {CircularProgressWrapper} from "../../../components/progress";
 import {ButtonLayout} from "../../../components/button";
 import fetchUserDetails, {getError, getStatus, getSuccess, getUserDetails} from "../../../container/current-user/saga";
 import fetchProfileEdit, {getError as getEditError, getStatus as getEditStatus, getSuccess as getEditSuccess} from "../../../container/edit_profile/saga";
@@ -45,6 +46,7 @@ const Form = [
 ];
 
 class General extends PureComponent{
+
   constructor(props){
     super(props);
     this.state={
@@ -59,13 +61,22 @@ class General extends PureComponent{
   }
 
   componentDidUpdate(){
-    const {success, pending} = this.props;
+    const {success, pending, error} = this.props;
     const {isClicked} = this.state;
 
-    if(isClicked && typeof pending !== "undefined" && typeof success !== "undefined" && !pending && success){
-      this.setState({
-        isClicked: false,
-      });
+    if(isClicked ){
+      if(typeof pending !== "undefined" && typeof success !== "undefined" && !pending && success){
+        this.setState({
+          isClicked: false,
+        });
+      }else if(error){
+        this.setState({
+          isClicked: false,
+          form: {
+            ...userDetails,
+          }
+        });
+      }
     }
   }
 
@@ -144,7 +155,14 @@ class General extends PureComponent{
             <Separator height={2}/>
           </Fragment>
         )}
-        <ButtonLayout variant="contained" color="primary" onClick={() => this.onUpdate()}>Update Profile</ButtonLayout>
+        <ButtonLayout 
+          variant="contained" 
+          color="primary" 
+          endIcon={isClicked && <CircularProgressWrapper/>}
+          onClick={() => this.onUpdate()}
+        >
+          Update Profile
+        </ButtonLayout>
         <Separator height={2}/>
       </Fragment>
     )

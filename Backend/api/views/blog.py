@@ -12,16 +12,32 @@ def create_blog(request):
     if request.method == 'POST' and is_auth:
         body = json.loads(request.body)
         user = User.objects.get_by_email(email)
+
         body = {
             'user': user,
+            'tags': ['react', 'full stack', 'web development', 'nextjs'],
             **body,
         }
+
         if body.get('blog_text') == '' or body.get('title') == '':
             response = {'message': 'Please write something', 'status': 400}
             return JsonResponse(response, status=400)
 
         if body.get('category'):
             blog = Blog.create(**body)
+
+            tags = body.get('tags')
+
+            for tag in tags:
+                tagObj = Tag.objects.get_by_title(tag)
+                
+                if not tagObj:
+                    tagObj = Tag.create(tag)
+                
+                blog.tags.add(tagObj)
+
+            blog.save()
+
             response = {
                 'status': 200,
                 'blog': blog.serialize()
@@ -55,12 +71,19 @@ def get_blog(request, blog_id):
             for like in likes_list:
                 likes.append(like.serialize())
 
+            tag_list = []
+
+            tags = blog.tags.all()
+
+            for tag in tags:
+                tag_list.append(tag.title)
             
             response = {
                 'status': 200,
                 'blog': blog.serialize(),
                 'likes': likes,
-                'comments': comments_on_blog
+                'comments': comments_on_blog,
+                'tags': tag_list
             }
 
             return JsonResponse(response, status=200)

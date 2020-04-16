@@ -69,7 +69,7 @@ export const getNewBlogError = state => state.newBlogReducer.error;
 export const getNewBlogSuccess = state => state.newBlogReducer.success;
 
 //SAGA
-export default function fetchNewBlogDetails(title, blog_text, category) {
+export default function fetchNewBlogDetails(title, blog_text, category, tags) {
   return dispatch => {
     dispatch(newBlogPending());
     return fetch(`${DOMAIN_URL}${BASE_URL}blog`, {
@@ -77,7 +77,7 @@ export default function fetchNewBlogDetails(title, blog_text, category) {
       headers: {
         Authorization: `Bearer ${cookie.get('token')}`,
       },
-      body: JSON.stringify({title: title, blog_text: blog_text, category: category})
+      body: JSON.stringify({title: title, blog_text: blog_text, category: category, tags: tags})
     })
         .then(res => res.json())
         .then(res => {

@@ -13,12 +13,13 @@ const ACTIONS = {
     }
   };
   
-  const blogSuccess = (blog,comments,likes) => {
+  const blogSuccess = (blog,comments,likes,tags) => {
     return{
       type: ACTIONS.GET_SUCCESS,
       blog,
       comments,
       likes,
+      tags,
     }
   };
   
@@ -34,6 +35,7 @@ const ACTIONS = {
     pending: false,
     error: null,
     blog: null,
+    tags: [],
     comments: null,
     likes: null,
     success: false,
@@ -52,6 +54,7 @@ const ACTIONS = {
           pending: false,
           blog: action.blog,
           comments: action.comments,
+          tags: action.tags,
           likes: action.likes,
           success: true,
         };
@@ -68,6 +71,7 @@ const ACTIONS = {
   //SELECTORS
   export const getStatus = state => state.blogReducer.pending;
   export const getBlog = state => state.blogReducer.blog;
+  export const getTags = state => state.blogReducer.tags;
   export const getBlogComments = state => state.blogReducer.comments;
   export const getBlogLikes = state => state.blogReducer.likes;
   export const getSuccess = state => state.blogReducer.success;
@@ -81,7 +85,7 @@ const ACTIONS = {
       .then(res => res.json())
       .then(res => {
         if(res.status === 200)
-          dispatch(blogSuccess(res.blog,res.comments,res.likes));
+          dispatch(blogSuccess(res.blog,res.comments,res.likes,res.tags));
         else
           throw res.message
       })
