@@ -25,7 +25,7 @@ SECRET_KEY = '9hg1s&&z7=47+q#!nhj+a&0#cf+6d*(zb!6e3-k^ph7(=#9(@p'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://cryptic-reef-54131.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
@@ -55,23 +55,18 @@ MIDDLEWARE = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
     ),
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000',
+    'https://cryptic-reef-54131.herokuapp.com',
 ]
 CORS_ORIGIN_REGEX_WHITELIST = [
-    'http://localhost:3000',
+    'https://cryptic-reef-54131.herokuapp.com',
 ]
 
 ROOT_URLCONF = 'PostBook.urls'

@@ -1,12 +1,12 @@
 import json
-from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
 from django.http.response import JsonResponse
 
 from api.models import *
 from .authorization import authenticate
 
 
-@csrf_exempt
+@api_view(['POST'])
 def create_like(request):
     is_auth, email = authenticate(request)
     if request.method == 'POST' and is_auth:
@@ -35,7 +35,7 @@ def create_like(request):
         return response
 
 
-@csrf_exempt
+@api_view(['DELETE'])
 def delete_like(request):
     is_auth, email = authenticate(request)
     if request.method == 'DELETE' and is_auth:

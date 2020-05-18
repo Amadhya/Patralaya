@@ -1,13 +1,13 @@
 import json
 import jwt
-from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
 from django.http.response import JsonResponse
 
 from api.models import *
 from .authorization import authenticate
 
 
-@csrf_exempt
+@api_view(['POST'])
 def login(request):
     if request.method == 'POST':
         body = json.loads(request.body)
@@ -39,7 +39,7 @@ def login(request):
         return response
 
 
-@csrf_exempt
+@api_view(['POST'])
 def signin(request):
     if request.method == 'POST':
         body = json.loads(request.body)
@@ -67,7 +67,7 @@ def signin(request):
         return response
 
 
-@csrf_exempt
+@api_view(['GET'])
 def user_profile(request):
     is_auth, email = authenticate(request)
     if request.method == 'GET' and is_auth:
@@ -79,7 +79,7 @@ def user_profile(request):
         return JsonResponse(response)
 
 
-@csrf_exempt
+@api_view(['PATCH'])
 def edit_user_details(request):
     if request.method == 'PATCH':
         isAuth, email = authenticate(request)
@@ -132,7 +132,7 @@ def edit_user_details(request):
     return JsonResponse(response, status=400)
 
 
-@csrf_exempt
+@api_view(['PATCH'])
 def change_password(request):
     if request.method == 'PATCH':
         isAuth, email = authenticate(request)

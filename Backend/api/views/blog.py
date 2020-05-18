@@ -1,12 +1,12 @@
 import json
-from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
 from django.http.response import JsonResponse
 
 from api.models import *
 from .authorization import authenticate
 
 
-@csrf_exempt
+@api_view(['POST'])
 def create_blog(request):
     is_auth, email = authenticate(request)
     if request.method == 'POST' and is_auth:
@@ -50,7 +50,7 @@ def create_blog(request):
     response = {'message': 'not authorized', 'status': 500}
     return JsonResponse(response, status=500)
 
-@csrf_exempt
+@api_view(['GET'])
 def get_blog(request, blog_id):
     if request.method == 'GET':
         blog = Blog.objects.get_by_id(blog_id)
@@ -91,7 +91,7 @@ def get_blog(request, blog_id):
         response = {'message': 'Invalid blog id', 'status': 400}
         return JsonResponse(response, status=400)
 
-@csrf_exempt
+@api_view(['GET'])
 def blogs_by_user(request, user_id):
     is_auth, email = authenticate(request)
     if request.method == 'GET' and is_auth:
@@ -129,7 +129,7 @@ def blogs_by_user(request, user_id):
         return JsonResponse(response)
 
 
-@csrf_exempt
+@api_view(['PATCH'])
 def edit_blog(request, blog_id):
     if request.method == 'PATCH' and authenticate(request):
         body = json.loads(request.body)
@@ -148,7 +148,7 @@ def edit_blog(request, blog_id):
         }
         return JsonResponse(response)
 
-@csrf_exempt
+@api_view(['DELETE'])
 def delete_blog(request, blog_id):
     if request.method == 'DELETE' and authenticate(request):
         Blog.objects.get_by_id(blog_id).delete()

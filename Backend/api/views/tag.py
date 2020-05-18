@@ -1,12 +1,12 @@
 import json
-from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
 from django.http.response import JsonResponse
 
 from api.models import *
 from .authorization import authenticate
 
 
-@csrf_exempt
+@api_view(['GET'])
 def tag_blogs(request,tag_title):
     if request.method == 'GET':
         tag = Tag.objects.get_by_title(tag_title)

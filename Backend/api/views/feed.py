@@ -1,11 +1,11 @@
-from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
 from django.http.response import JsonResponse
 
 from api.models import *
 from .authorization import authenticate
 
 
-@csrf_exempt
+@api_view(['GET'])
 def get_blog_feed(request):
     if request.method == 'GET':
         feed = []

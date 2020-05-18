@@ -1,12 +1,11 @@
 import json
-from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
 from django.http.response import JsonResponse, HttpResponse
 
 from api.models import *
 from .authorization import authenticate
 
-
-@csrf_exempt
+@api_view(['POST'])
 def comment_text(request):
     is_auth, email = authenticate(request)
     if request.method == 'POST' and is_auth:
@@ -28,7 +27,7 @@ def comment_text(request):
         return JsonResponse(response, status=200)
 
 
-@csrf_exempt
+@api_view(['PATCH'])
 def edit_comment(request, comment_id):
     if request.method == 'PATCH' and authenticate(request):
         body = json.loads(request.body)
@@ -44,7 +43,7 @@ def edit_comment(request, comment_id):
         return HttpResponse({'Error': "comment not saved"}, status=400)
 
 
-@csrf_exempt
+@api_view(['DELETE'])
 def delete_comment(request, comment_id):
     if request.method == 'DELETE' and authenticate(request):
         Comment.objects.get_by_id(comment_id).delete()

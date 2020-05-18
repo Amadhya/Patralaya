@@ -8,12 +8,12 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.hashers import make_password
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
 from django.http.response import JsonResponse
 
 from api.models.users import User
 
-@csrf_exempt
+@api_view(['POST'])
 def google_login_access_token(request):
     if request.method == 'POST':
         body = json.loads(request.body)
